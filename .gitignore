@@ -1,0 +1,39 @@
+# 密钥与本地配置（禁止上传）
+.env
+config.json
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+.pytest_cache/
+.mypy_cache/
+
+# 编辑器
+.idea/
+.vscode/
+*.swp
+
+# 超过 GitHub 100MB 限制的模型权重，需本地或网盘另行放置
+*.safetensors
+*.bin
+*.h5
+*.onnx
+*.pt
+*.pth
+*.ckpt
+*.ckpt.data-*
+*.ckpt.index
+*.ckpt.meta
+*.msgpack
+
+# 训练/评测产物目录（体积大，不含源码）
+bert_model/
+output/
+bert-master/output/
+benchmark_out/
+benchmark_chinese_out/

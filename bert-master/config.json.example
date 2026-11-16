@@ -1,0 +1,6 @@
+{
+  "BAIDU_TRANSLATE_APPID": "你的_appid",
+  "BAIDU_TRANSLATE_SECRET": "你的_密钥",
+  "DEEPSEEK_API_KEY": "你的_deepseek_api_key",
+  "LLM_PROVIDER": "deepseek"
+}

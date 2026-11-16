@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>校园智心守护 · 管理员仪表盘</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f3f4f6;color:#111827}
+    .layout{display:flex;min-height:100vh}
+    .sidebar{width:240px;background:#0f172a;color:#e5e7eb;padding:16px 12px;display:flex;flex-direction:column}
+    .brand{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+    .brand-logo{width:34px;height:34px;border-radius:999px;background:radial-gradient(circle at 30% 30%,#60a5fa,#4f46e5);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff}
+    .brand-title{font-size:16px;font-weight:600}
+    .brand-subtitle{font-size:12px;color:#9ca3af}
+    .sidebar small{color:#9ca3af;font-size:11px}
+    .sidebar-nav{display:flex;flex-direction:column;gap:4px;margin-top:10px}
+    .admin-nav-link{border-radius:8px;border:none;padding:8px 10px;background:transparent;color:#cbd5e1;text-align:left;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px}
+    .admin-nav-link:hover{background:rgba(255,255,255,.08)}
+    .admin-nav-link.active{background:rgba(59,130,246,.25);color:#fff}
+    .sidebar-bottom{margin-top:auto;display:flex;flex-direction:column;gap:8px}
+    .sidebar-bottom .btn{font-size:12px}
+    .sidebar-hint{font-size:10px;color:#64748b;line-height:1.35;padding:0 2px}
+    .main{flex:1;padding:18px 26px 32px;max-width:1240px;margin:0 auto}
+    .card{border-radius:12px;border:1px solid #e5e7eb;box-shadow:0 10px 25px rgba(15,23,42,.06)}
+    .metric-title{font-size:12px;color:#6b7280}
+    .metric-value{font-size:22px;font-weight:600}
+    .metric-desc{font-size:11px;color:#9ca3af}
+    .risk-pill{display:inline-flex;align-items:center;border-radius:999px;padding:0 8px;font-size:11px;margin-left:4px}
+    .risk-normal{background:rgba(16,185,129,.15);color:#15803d}
+    .risk-warning{background:rgba(234,179,8,.15);color:#b45309}
+    .risk-crisis{background:rgba(239,68,68,.15);color:#b91c1c}
+    .history-list{max-height:320px;overflow-y:auto;font-size:13px}
+    .history-item{padding:6px 8px;border-radius:8px;border:1px solid #e5e7eb;margin-bottom:4px;background:#f9fafb}
+    .small-text{font-size:12px;color:#6b7280}
+    .admin-page{display:none}
+    .admin-page.active{display:block}
+    .q-card{border:1px solid #e5e7eb;border-radius:10px;padding:12px;margin-bottom:8px;background:#fff}
+    .survey-q-row{border:1px solid #e2e8f0;border-radius:12px;padding:14px;margin-bottom:12px;background:#f8fafc}
+    .survey-q-row textarea.form-control{font-size:13px}
+    .sq-rule-row{background:#fff;border:1px solid #e5e7eb!important}
+    .sq-phq-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+    @media(min-width:768px){.sq-phq-grid{grid-template-columns:repeat(4,1fr)}}
+    .risk-command-center{border-radius:16px;padding:18px 20px;margin-bottom:20px;background:linear-gradient(125deg,#0f172a 0%,#1e3a5f 45%,#312e81 100%);color:#e2e8f0;box-shadow:0 16px 40px rgba(15,23,42,.35)}
+    .risk-command-center h6{color:#f8fafc;font-weight:600;letter-spacing:.02em}
+    .risk-stat-tile{border-radius:12px;padding:14px 16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+    .risk-stat-tile.crisis-tile{border-color:rgba(248,113,113,.5);background:linear-gradient(135deg,rgba(239,68,68,.25),rgba(15,23,42,.4));animation:crisisGlow 2.5s ease-in-out infinite}
+    @keyframes crisisGlow{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.35)}50%{box-shadow:0 0 24px 4px rgba(239,68,68,.25)}}
+    .risk-stat-num{font-size:28px;font-weight:700;line-height:1.1}
+    .risk-stat-label{font-size:12px;opacity:.85;margin-top:4px}
+    .nav-users-hidden{display:none!important}
+    .perm-chip{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe;margin:2px 4px 0 0}
+    .btn-user-action{padding:2px 10px;border-radius:999px;font-size:12px}
+    .perm-option{border:1px solid #e5e7eb;border-radius:10px;padding:10px 12px;background:#f8fafc}
+    .perm-option .form-check-label{width:100%}
+    .perm-code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:12px;color:#1d4ed8}
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">CM</div>
+        <div>
+          <div class="brand-title">校园智心守护</div>
+          <div class="brand-subtitle">管理员仪表盘</div>
+        </div>
+      </div>
+      <small id="admin-welcome">欢迎，管理员</small>
+      <nav class="sidebar-nav">
+        <button class="admin-nav-link active" data-page="page-overview">
+          <i class="bi bi-bar-chart"></i> 数据概览
+        </button>
+        <button class="admin-nav-link" data-page="page-surveys">
+          <i class="bi bi-clipboard-check"></i> 问卷管理
+        </button>
+        <button class="admin-nav-link" data-page="page-conversations">
+          <i class="bi bi-chat-dots"></i> 对话记录
+        </button>
+        <button class="admin-nav-link nav-users-hidden" id="nav-users" data-page="page-users">
+          <i class="bi bi-people"></i> 用户与权限
+        </button>
+        <button class="admin-nav-link nav-users-hidden" id="nav-risk-lexicon" data-page="page-risk-lexicon">
+          <i class="bi bi-journal-code"></i> 风险词表
+        </button>
+      </nav>
+      <div class="sidebar-bottom">
+        <button id="back-to-user" class="btn btn-outline-info btn-sm w-100">
+          <i class="bi bi-arrow-left-circle me-1"></i> 返回学生端
+        </button>
+        <div class="sidebar-hint">返回首页不会退出登录，登录状态会保留，可继续使用心情倾诉等功能。</div>
+        <button id="admin-logout" class="btn btn-outline-danger btn-sm w-100">
+          <i class="bi bi-box-arrow-right me-1"></i> 退出登录
+        </button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div id="page-overview" class="admin-page active">
+        <div class="risk-command-center">
+          <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
+            <div>
+              <h6 class="mb-1"><i class="bi bi-shield-exclamation me-2"></i>智能预警与风险态势</h6>
+              <div class="small-text" style="opacity:.9">基于对话情感与敏感规则的统计，便于学校及时关注与干预（申报书核心能力展示）。</div>
+            </div>
+            <button id="refresh-risk" type="button" class="btn btn-sm btn-outline-light">
+              <i class="bi bi-arrow-clockwise me-1"></i>刷新预警数据
+            </button>
+          </div>
+          <div class="row g-3">
+            <div class="col-6 col-md-3">
+              <div class="risk-stat-tile">
+                <div class="risk-stat-num" id="rs-total">—</div>
+                <div class="risk-stat-label">对话总条数（当前可见范围）</div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="risk-stat-tile">
+                <div class="risk-stat-num text-warning" id="rs-warning">—</div>
+                <div class="risk-stat-label">预警合计（关注级 + 干预级等）</div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="risk-stat-tile">
+                <div class="risk-stat-num text-info" id="rs-attention">—</div>
+                <div class="risk-stat-label">关注级 attention</div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="risk-stat-tile crisis-tile">
+                <div class="risk-stat-num text-danger" id="rs-crisis">—</div>
+                <div class="risk-stat-label">危机级 crisis（优先跟进）</div>
+              </div>
+            </div>
+          </div>
+          <div class="small-text mt-3 mb-0" style="opacity:.75"><i class="bi bi-info-circle me-1"></i>危机条目请结合「对话记录」查看原文，并按校规启动心理危机预案。</div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <h5 class="mb-1">对话监控总览</h5>
+            <div class="small-text">情绪分布 · 风险比例 · 活跃趋势</div>
+          </div>
+          <button id="refresh" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-arrow-clockwise me-1"></i>刷新
+          </button>
+        </div>
+        <div class="row g-3 mb-3">
+          <div class="col-md-4"><div class="card p-3"><div class="metric-title">累计对话轮次</div><div class="metric-value" id="m-total">0</div><div class="metric-desc">数据库中采样的对话数</div></div></div>
+          <div class="col-md-4"><div class="card p-3"><div class="metric-title">高风险占比</div><div class="metric-value" id="m-crisis-rate">0%</div><div class="metric-desc">risk_level = crisis</div></div></div>
+          <div class="col-md-4"><div class="card p-3"><div class="metric-title">最近活跃天数</div><div class="metric-value" id="m-days">0</div><div class="metric-desc">按日期去重</div></div></div>
+        </div>
+        <div class="row g-3">
+          <div class="col-lg-7"><div class="card p-3"><div class="small-text mb-2"><i class="bi bi-activity me-1"></i>按日期统计的对话趋势</div><canvas id="chart-trend" height="140"></canvas></div></div>
+          <div class="col-lg-5"><div class="card p-3"><div class="small-text mb-2"><i class="bi bi-emoji-smile me-1"></i>情绪标签分布</div><canvas id="chart-emotion" height="140"></canvas><div id="chart-emotion-legend" class="small-text mt-2"></div></div></div>
+        </div>
+        <div class="row g-3 mt-1">
+          <div class="col-lg-6"><div class="card p-3"><div class="small-text mb-2"><i class="bi bi-shield-check me-1"></i>风险等级分布</div><canvas id="chart-risk" height="140"></canvas></div></div>
+          <div class="col-lg-6"><div class="card p-3"><div class="small-text mb-2"><i class="bi bi-graph-up me-1"></i>风险等级趋势（按日期）</div><canvas id="chart-risk-trend" height="140"></canvas></div></div>
+        </div>
+        <div class="row g-3 mt-1">
+          <div class="col-12"><div class="card p-3"><div class="small-text mb-2"><i class="bi bi-chat-dots me-1"></i>最近对话摘要</div><div id="recent-list" class="history-list"></div></div></div>
+        </div>
+      </div>
+
+      <div id="page-surveys" class="admin-page">
+        <div id="survey-auth-alert" class="alert alert-warning small py-2" style="display:none">
+          未检测到登录令牌或不是管理员。请先在 <a href="index.html">首页</a> 使用管理员账号登录，再打开本页。
+        </div>
+        <div id="survey-perm-hint" class="alert alert-info small py-2 mb-3" style="display:none"></div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="mb-0">问卷管理</h5>
+          <button id="btn-refresh-surveys" type="button" class="btn btn-outline-primary btn-sm"><i class="bi bi-arrow-clockwise me-1"></i>刷新列表</button>
+        </div>
+
+        <div id="survey-editor-wrap" class="card p-3 mb-3">
+          <h6 class="mb-2" id="survey-form-title">新建自定义问卷</h6>
+          <input type="hidden" id="editing-survey-id" value="" />
+          <div class="row g-2 mb-2">
+            <div class="col-md-6">
+              <label class="form-label small-text mb-0">标题</label>
+              <input id="sq-title" type="text" class="form-control form-control-sm" placeholder="问卷名称" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label small-text mb-0">分数乘数</label>
+              <input id="sq-multiplier" type="number" step="0.01" class="form-control form-control-sm" value="1" />
+            </div>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small-text mb-0">说明</label>
+            <textarea id="sq-desc" class="form-control form-control-sm" rows="2" placeholder="面向作答者的简短说明"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small-text mb-1">评分分档（按总分或标准分落档）</label>
+            <div class="small-text text-muted mb-2">每一行一档：填写分数区间（含边界）、等级名称与给学生的建议语。乘数为 1 时按<strong>粗分</strong>落档；否则按<strong>标准分</strong>（粗分×乘数取整）落档。</div>
+            <div id="sq-rules-ranges-wrap" class="mb-2"></div>
+            <button type="button" id="btn-sq-add-rule" class="btn btn-outline-secondary btn-sm">＋ 添加分档</button>
+            <details class="mt-2 small-text">
+              <summary class="text-muted" style="cursor:pointer">高级：用 JSON 覆盖分档（可选）</summary>
+              <textarea id="sq-rules" class="form-control form-control-sm font-monospace mt-2" rows="5" spellcheck="false" placeholder='{"ranges":[{"min":0,"max":4,"level":"…","suggestion":"…"}]}'></textarea>
+              <button type="button" id="btn-sq-rules-from-json" class="btn btn-outline-primary btn-sm mt-2">从上方 JSON 加载到表格</button>
+            </details>
+          </div>
+          <div class="d-flex flex-wrap gap-2 mb-2">
+            <button type="button" id="btn-sq-add-q" class="btn btn-outline-secondary btn-sm">＋ 添加题目</button>
+            <button type="button" id="btn-sq-template-phq" class="btn btn-outline-secondary btn-sm">套用 PHQ-9 九题模板</button>
+            <button type="button" id="btn-sq-clear-form" class="btn btn-outline-warning btn-sm">清空表单</button>
+          </div>
+          <div id="sq-questions-wrap"></div>
+          <div class="mt-3 d-flex flex-wrap gap-2">
+            <button type="button" id="btn-sq-submit" class="btn btn-primary btn-sm">创建问卷</button>
+            <button type="button" id="btn-sq-cancel-edit" class="btn btn-outline-secondary btn-sm" style="display:none">取消编辑</button>
+          </div>
+          <div id="sq-form-msg" class="small-text mt-2"></div>
+        </div>
+
+        <h6 class="mb-2">已有问卷</h6>
+        <div id="survey-list-admin"></div>
+
+        <div id="survey-results-wrap">
+          <hr/>
+          <h6>答卷记录</h6>
+          <div class="mb-2">
+            <select id="result-filter-qid" class="form-select form-select-sm" style="max-width:300px">
+              <option value="">全部问卷</option>
+            </select>
+          </div>
+          <button type="button" id="btn-load-results" class="btn btn-outline-secondary btn-sm mb-2">加载答卷</button>
+          <div id="survey-results-list" class="history-list"></div>
+        </div>
+      </div>
+
+      <div id="page-conversations" class="admin-page">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="mb-0">对话记录</h5>
+          <button id="btn-refresh-conv" class="btn btn-outline-primary btn-sm"><i class="bi bi-arrow-clockwise me-1"></i>刷新</button>
+        </div>
+        <div id="conv-full-list" class="history-list" style="max-height:70vh"></div>
+      </div>
+
+      <div id="page-users" class="admin-page">
+        <h5 class="mb-3">用户与权限</h5>
+        <p class="small-text mb-3" id="users-page-hint">加载中…</p>
+        <div id="super-create-wrap" class="card p-3 mb-4" style="display:none">
+          <h6 class="mb-2">创建校级管理员（仅超级管理员）</h6>
+          <div class="row g-2">
+            <div class="col-md-3"><label class="small-text">用户名</label><input id="sa-username" class="form-control form-control-sm" /></div>
+            <div class="col-md-3"><label class="small-text">密码</label><input id="sa-password" type="password" class="form-control form-control-sm" /></div>
+            <div class="col-md-3"><label class="small-text">显示名</label><input id="sa-display" class="form-control form-control-sm" /></div>
+            <div class="col-md-3"><label class="small-text">学校 ID</label><input id="sa-school" class="form-control form-control-sm" placeholder="必填" /></div>
+          </div>
+          <button type="button" id="btn-create-sa" class="btn btn-primary btn-sm mt-2">创建校级管理员</button>
+          <div id="sa-msg" class="small-text mt-2"></div>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mb-2 align-items-center" id="users-filter-bar">
+          <label class="small-text mb-0">筛选角色（超级管理员可用）：</label>
+          <select id="users-role-filter" class="form-select form-select-sm" style="max-width:220px">
+            <option value="">全部</option>
+            <option value="student">学生</option>
+            <option value="school_admin">校级管理员</option>
+            <option value="super_admin">超级管理员</option>
+          </select>
+          <button type="button" id="btn-load-users" class="btn btn-outline-primary btn-sm">重新加载</button>
+        </div>
+        <div class="table-responsive card p-0">
+          <table class="table table-sm table-hover mb-0 small">
+            <thead class="table-light"><tr><th>ID</th><th>用户名</th><th>角色</th><th>显示名</th><th>学校</th><th>身份标签</th><th>注册时间</th><th id="th-user-actions">操作</th></tr></thead>
+            <tbody id="users-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="page-risk-lexicon" class="admin-page">
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
+          <div>
+            <h5 class="mb-1">风险词表与阈值</h5>
+            <p class="small-text mb-0" id="risk-lex-hint">
+              在页面内增删改后<strong>会自动</strong>同步到对话/情感分析管线；也可手动点「重新加载」。
+            </p>
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <button type="button" id="btn-risk-lex-new" class="btn btn-success btn-sm">
+              <i class="bi bi-plus-lg me-1"></i>新增词条
+            </button>
+            <button type="button" id="btn-risk-lex-reload" class="btn btn-warning btn-sm">
+              <i class="bi bi-arrow-repeat me-1"></i>仅刷新内存缓存
+            </button>
+            <button type="button" id="btn-risk-lex-refresh" class="btn btn-outline-primary btn-sm">
+              <i class="bi bi-arrow-clockwise me-1"></i>刷新列表
+            </button>
+          </div>
+        </div>
+        <div id="risk-lex-banner" class="alert alert-secondary small py-2 d-none mb-3"></div>
+        <div class="card p-3 mb-3">
+          <h6 class="mb-2">干预阈值（risk_config）</h6>
+          <p class="small-text mb-2">综合分 ≥ 关注阈值 → 关注级；≥ 干预阈值 → 干预级（与代码中 risk_assessor 逻辑一致）。</p>
+          <div class="row g-2 align-items-end">
+            <div class="col-md-3">
+              <label class="small-text">attention_threshold</label>
+              <input type="number" step="0.01" min="0" max="1" id="cfg-attention" class="form-control form-control-sm" />
+            </div>
+            <div class="col-md-3">
+              <label class="small-text">intervention_threshold</label>
+              <input type="number" step="0.01" min="0" max="1" id="cfg-intervention" class="form-control form-control-sm" />
+            </div>
+            <div class="col-md-3">
+              <button type="button" id="btn-risk-cfg-save" class="btn btn-primary btn-sm">保存阈值</button>
+            </div>
+          </div>
+          <div id="risk-lex-config-raw" class="small-text font-monospace mt-2 text-muted">—</div>
+        </div>
+        <div class="card p-0">
+          <div class="card-header py-2 small-text d-flex justify-content-between align-items-center">
+            <span>词表条目（risk_lexicon）</span>
+            <span class="text-muted">category：crisis_zh / crisis_en / crisis_regex / negative / metaphor / homophone</span>
+          </div>
+          <div class="table-responsive" style="max-height:58vh;overflow:auto">
+            <table class="table table-sm table-hover mb-0 small">
+              <thead class="table-light sticky-top"><tr><th>ID</th><th>category</th><th>phrase</th><th>启用</th><th>排序</th><th>创建时间</th><th style="min-width:120px">操作</th></tr></thead>
+              <tbody id="risk-lex-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal fade" id="surveyViewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header"><h6 class="modal-title" id="surveyViewTitle">问卷详情</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body"><div id="surveyViewBody" class="small mb-0" style="max-height:60vh;overflow-y:auto"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="riskLexModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="riskLexModalTitle">新增词条</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="rl-edit-id" value="" />
+          <div class="mb-2">
+            <label class="small-text">类别</label>
+            <select id="rl-cat" class="form-select form-select-sm">
+              <option value="crisis_zh">crisis_zh（危机·中文子串）</option>
+              <option value="crisis_en">crisis_en（危机·英文子串）</option>
+              <option value="crisis_regex">crisis_regex（危机·正则）</option>
+              <option value="negative">negative（负面·加权）</option>
+              <option value="metaphor">metaphor（隐喻）</option>
+              <option value="homophone">homophone（谐音）</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label class="small-text">词条 / 正则表达式</label>
+            <textarea id="rl-phrase" class="form-control form-control-sm" rows="3" placeholder="中文或英文短语；crisis_regex 时填合法 Python 正则"></textarea>
+          </div>
+          <div class="row g-2">
+            <div class="col-6">
+              <label class="small-text">排序 sort_order</label>
+              <input type="number" id="rl-sort" class="form-control form-control-sm" value="0" />
+            </div>
+            <div class="col-6 d-flex align-items-end">
+              <label class="small-text"><input type="checkbox" id="rl-active" checked /> 启用</label>
+            </div>
+          </div>
+          <div id="rl-modal-msg" class="small-text mt-2"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
+          <button type="button" id="rl-modal-save" class="btn btn-primary btn-sm">保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="userPermModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title">配置校级管理员权限</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="upm-uid" value="" />
+          <div class="small-text mb-2">账号：<strong id="upm-uname">—</strong></div>
+          <div class="vstack gap-2">
+            <label class="perm-option form-check">
+              <input class="form-check-input me-2 upm-perm" type="checkbox" value="survey_manage" />
+              <span class="form-check-label">
+                <span class="perm-code">survey_manage</span><br/>
+                允许创建、编辑、启停问卷
+              </span>
+            </label>
+            <label class="perm-option form-check">
+              <input class="form-check-input me-2 upm-perm" type="checkbox" value="risk_lexicon_view" />
+              <span class="form-check-label">
+                <span class="perm-code">risk_lexicon_view</span><br/>
+                允许查看风险词表与阈值
+              </span>
+            </label>
+            <label class="perm-option form-check">
+              <input class="form-check-input me-2 upm-perm" type="checkbox" value="risk_lexicon_edit" />
+              <span class="form-check-label">
+                <span class="perm-code">risk_lexicon_edit</span><br/>
+                允许新增/编辑风险词条
+              </span>
+            </label>
+            <label class="perm-option form-check">
+              <input class="form-check-input me-2 upm-perm" type="checkbox" value="risk_lexicon_manage" />
+              <span class="form-check-label">
+                <span class="perm-code">risk_lexicon_manage</span><br/>
+                允许删除词条、修改阈值、刷新词表缓存
+              </span>
+            </label>
+            <label class="perm-option form-check">
+              <input class="form-check-input me-2 upm-perm" type="checkbox" value="student_profile_view" />
+              <span class="form-check-label">
+                <span class="perm-code">student_profile_view</span><br/>
+                允许查看本校学生个人画像页（聊天、干预与情绪趋势）
+              </span>
+            </label>
+          </div>
+          <div id="upm-msg" class="small-text mt-2"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">取消</button>
+          <button type="button" id="upm-save" class="btn btn-primary btn-sm">保存权限</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="userProfileModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title">学生个人画像：<span id="upf-title">—</span></h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="upf-meta" class="small-text mb-2 text-muted">—</div>
+          <div class="row g-3 mb-2">
+            <div class="col-lg-6">
+              <div class="card p-3">
+                <div class="small-text mb-2"><i class="bi bi-pie-chart me-1"></i>心情比例（饼图）</div>
+                <canvas id="upf-emotion-ratio" height="170"></canvas>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="card p-3">
+                <div class="small-text mb-2"><i class="bi bi-graph-up-arrow me-1"></i>心情概率与干预程度曲线</div>
+                <canvas id="upf-trend" height="170"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="card p-3">
+            <div class="small-text mb-2"><i class="bi bi-chat-left-text me-1"></i>最近聊天与干预记录</div>
+            <div id="upf-recent-list" class="history-list" style="max-height:40vh"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<script>
+(function(){
+  var API_BASE = (function(){ var o=window.location.origin; if(o&&o!=="null"&&o.indexOf("file")!==0) return o; return "http://127.0.0.1:6006"; })();
+  var authToken = localStorage.getItem("cm_token")||"";
+  function authHeaders(){ var h={}; if(authToken) h["Authorization"]="Bearer "+authToken; return h; }
+  function authJsonHeaders(){ var h={"Content-Type":"application/json"}; if(authToken) h["Authorization"]="Bearer "+authToken; return h; }
+
+  var PAGES = ["page-overview","page-surveys","page-conversations","page-users","page-risk-lexicon"];
+  var currentUser = null;
+  var permissionState = {
+    surveyView: false,
+    surveyManage: false,
+    surveyResults: false,
+    riskView: false,
+    riskEdit: false,
+    riskManage: false,
+    studentProfileView: false
+  };
+
+  function isAdminRole(r){ return r==="school_admin" || r==="super_admin" || r==="admin"; }
+  function isSuperAdmin(r){ return r==="super_admin"; }
+
+  function parsePermissionTokens(user){
+    var tokens = [];
+    var p = user && (user.admin_permissions || user.permissions);
+    if(Array.isArray(p)){
+      p.forEach(function(x){ if(x!=null) tokens.push(String(x)); });
+    }else if(p && typeof p==="object"){
+      Object.keys(p).forEach(function(k){ if(p[k]) tokens.push(String(k)); });
+    }else if(typeof p==="string"){
+      tokens = tokens.concat(p.split(/[,;|，；\s]+/));
+    }
+    var idTag = user && user.identity_tag;
+    if(typeof idTag==="string" && idTag.trim()){
+      tokens = tokens.concat(idTag.split(/[,;|，；\s]+/));
+    }
+    return tokens.map(function(s){ return s.trim().toLowerCase(); }).filter(Boolean);
+  }
+
+  function resolvePermissionState(user){
+    var role = (user && user.role) || "";
+    if(isSuperAdmin(role)){
+      return {
+        surveyView:true, surveyManage:true, surveyResults:true,
+        riskView:true, riskEdit:true, riskManage:true, studentProfileView:true
+      };
+    }
+    if(!isAdminRole(role)){
+      return {
+        surveyView:false, surveyManage:false, surveyResults:false,
+        riskView:false, riskEdit:false, riskManage:false, studentProfileView:false
+      };
+    }
+    var tokens = parsePermissionTokens(user);
+    function hasAny(keys){
+      for(var i=0;i<keys.length;i++){
+        if(tokens.indexOf(keys[i])>=0) return true;
+      }
+      return false;
+    }
+    var canManage = hasAny(["survey_manage"]);
+    var canResults = true;
+    var riskView = hasAny(["risk_lexicon_view"]);
+    var riskEdit = hasAny(["risk_lexicon_edit"]);
+    var riskManage = hasAny(["risk_lexicon_manage"]);
+    var studentProfileView = hasAny(["student_profile_view"]);
+    return {
+      surveyView: true,
+      surveyManage: canManage,
+      surveyResults: canResults,
+      riskView: riskView || riskEdit || riskManage,
+      riskEdit: riskEdit || riskManage,
+      riskManage: riskManage,
+      studentProfileView: studentProfileView
+    };
+  }
+
+  function applySurveyPermissionUI(){
+    var hint = document.getElementById("survey-perm-hint");
+    var editor = document.getElementById("survey-editor-wrap");
+    var results = document.getElementById("survey-results-wrap");
+    if(!hint || !editor || !results) return;
+    if(!authToken || !currentUser || !permissionState.surveyView){
+      hint.style.display = "block";
+      hint.className = "alert alert-warning small py-2 mb-3";
+      hint.textContent = "当前账号暂无问卷管理权限。";
+      editor.style.display = "none";
+      results.style.display = "none";
+      return;
+    }
+    var tips = [];
+    if(permissionState.surveyManage) tips.push("可创建、编辑、启停问卷");
+    if(permissionState.surveyResults) tips.push("可查看答卷记录");
+    if(!tips.length) tips.push("当前仅可查看问卷详情");
+    hint.style.display = "block";
+    hint.className = "alert alert-info small py-2 mb-3";
+    hint.textContent = "当前权限：" + tips.join("；") + "。如需更多操作，请由超级管理员授予对应权限。";
+    editor.style.display = permissionState.surveyManage ? "block" : "none";
+    results.style.display = permissionState.surveyResults ? "block" : "none";
+  }
+
+  document.querySelectorAll(".admin-nav-link").forEach(function(btn){
+    btn.addEventListener("click",function(){
+      document.querySelectorAll(".admin-nav-link").forEach(function(b){b.classList.remove("active")});
+      btn.classList.add("active");
+      var p = btn.getAttribute("data-page");
+      PAGES.forEach(function(id){ document.getElementById(id).classList.toggle("active",id===p); });
+      if(p==="page-surveys") loadAdminSurveys();
+      if(p==="page-users") loadUsersPage();
+      if(p==="page-risk-lexicon") loadRiskLexiconPage();
+    });
+  });
+
+  document.getElementById("back-to-user").addEventListener("click",function(){
+    window.location.href="index.html";
+  });
+  document.getElementById("admin-logout").addEventListener("click",function(){
+    localStorage.removeItem("cm_token");
+    window.location.href="index.html";
+  });
+
+  (async function(){
+    if(!authToken) return;
+    try{
+      var resp = await fetch(API_BASE+"/api/v1/auth/me",{headers:authHeaders()});
+      if(resp.ok){
+        currentUser = await resp.json();
+        var u = currentUser;
+        permissionState = resolvePermissionState(u);
+        var roleLabel = u.role==="super_admin" ? "超级管理员" : (u.role==="school_admin"||u.role==="admin" ? "校级管理员" : u.role||"用户");
+        document.getElementById("admin-welcome").innerHTML = "您好，<strong>"+(u.display_name||u.username||"管理员")+"</strong> <span class='badge bg-secondary'>"+roleLabel+"</span>";
+        if(isAdminRole(u.role)){
+          document.getElementById("nav-users").classList.remove("nav-users-hidden");
+        }
+        if(permissionState.riskView){
+          document.getElementById("nav-risk-lexicon").classList.remove("nav-users-hidden");
+        }else{
+          document.getElementById("nav-risk-lexicon").classList.add("nav-users-hidden");
+        }
+        applySurveyPermissionUI();
+      }
+    }catch(e){}
+  })();
+
+  if(!authToken) document.getElementById("survey-auth-alert").style.display="block";
+  applySurveyPermissionUI();
+
+  var trendChart,emoChart,riskChart,riskTrendChart,userProfileEmotionChart,userProfileTrendChart,userProfileModal;
+  function upsertChart(ctx,cfg,inst){ if(inst&&typeof inst.destroy==="function") inst.destroy(); return new Chart(ctx,cfg); }
+
+  async function loadData(){
+    var res = await fetch(API_BASE+"/api/v1/admin/conversations?limit=200",{headers:authHeaders()});
+    if(!res.ok) return {items:[]};
+    return await res.json();
+  }
+
+  function normalizeRiskLevel(r){
+    r = (r||"normal").toLowerCase();
+    if(r==="crisis") return "crisis";
+    if(r==="normal") return "normal";
+    return "warning";
+  }
+
+  async function refreshRiskBoard(){
+    if(!authToken){ return; }
+    try{
+      var res = await fetch(API_BASE+"/api/v1/admin/risk-stats",{headers:authHeaders()});
+      if(!res.ok) return;
+      var s = await res.json();
+      document.getElementById("rs-total").textContent = s.total != null ? s.total : "0";
+      document.getElementById("rs-warning").textContent = s.warning != null ? s.warning : "0";
+      document.getElementById("rs-attention").textContent = s.attention != null ? s.attention : "0";
+      document.getElementById("rs-crisis").textContent = s.crisis != null ? s.crisis : "0";
+    }catch(e){ console.error(e); }
+  }
+  document.getElementById("refresh-risk").addEventListener("click", refreshRiskBoard);
+
+  function buildCharts(items){
+    document.getElementById("m-total").textContent = items.length;
+    var crisis = items.filter(function(it){ return normalizeRiskLevel(it.risk_level)==="crisis"; }).length;
+    document.getElementById("m-crisis-rate").textContent = items.length?Math.round(crisis/items.length*100)+"%":"0%";
+    var days = new Set(items.map(function(it){return(it.created_at||"").slice(0,10)}));
+    document.getElementById("m-days").textContent = days.size;
+
+    var trendMap={};
+    items.forEach(function(it){ var d=(it.created_at||"").slice(0,10)||"未知"; trendMap[d]=(trendMap[d]||0)+1; });
+    var tl=Object.keys(trendMap).sort(), td=tl.map(function(d){return trendMap[d]});
+    trendChart = upsertChart(document.getElementById("chart-trend"),{type:"line",data:{labels:tl,datasets:[{label:"对话数",data:td,borderColor:"#2563eb",backgroundColor:"rgba(37,99,235,.2)",tension:.3}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{maxRotation:60,minRotation:30}}}}},trendChart);
+
+    var emoMap={};
+    items.forEach(function(it){ var e=(it.top_emotion||"未知").toLowerCase(); emoMap[e]=(emoMap[e]||0)+1; });
+    var ee=Object.entries(emoMap).sort(function(a,b){return b[1]-a[1]}).slice(0,8);
+    var emoCounts = ee.map(function(e){ return e[1]; });
+    var emoTotal = emoCounts.reduce(function(a,b){ return a+b; }, 0) || 1;
+    emoChart = upsertChart(document.getElementById("chart-emotion"),{
+      type:"doughnut",
+      data:{
+        labels:ee.map(function(e){return e[0]}),
+        datasets:[{data:emoCounts,backgroundColor:["#60a5fa","#f97316","#22c55e","#facc15","#a855f7","#fb7185","#0ea5e9","#94a3b8"]}]
+      },
+      options:{
+        plugins:{
+          legend:{display:false},
+          tooltip:{
+            callbacks:{
+              label:function(ctx){
+                var v = Number(ctx.raw || 0);
+                var p = ((v/emoTotal)*100).toFixed(1);
+                return ctx.label + ": " + p + "% (" + v + ")";
+              }
+            }
+          },
+          datalabels:{
+            color:"#0f172a",
+            formatter:function(v){ return Math.round((v/emoTotal)*100) + "%"; },
+            font:{weight:"bold",size:11}
+          }
+        }
+      },
+      plugins:[ChartDataLabels]
+    },emoChart);
+    var legend = document.getElementById("chart-emotion-legend");
+    if(legend){
+      if(!ee.length){
+        legend.innerHTML = '<span class="text-muted">暂无情绪数据</span>';
+      }else{
+        legend.innerHTML = ee.map(function(pair, idx){
+          var key = pair[0] || "未知";
+          var count = Number(pair[1] || 0);
+          var p = ((count/emoTotal)*100).toFixed(1);
+          var color = ["#60a5fa","#f97316","#22c55e","#facc15","#a855f7","#fb7185","#0ea5e9","#94a3b8"][idx % 8];
+          return '<span style="display:inline-flex;align-items:center;margin-right:10px;margin-bottom:4px;"><span style="width:10px;height:10px;border-radius:50%;background:'+color+';display:inline-block;margin-right:6px;"></span>'+key+' '+p+'%</span>';
+        }).join("");
+      }
+    }
+
+    var rc=[
+      items.filter(function(it){ return normalizeRiskLevel(it.risk_level)==="normal"; }).length,
+      items.filter(function(it){ return normalizeRiskLevel(it.risk_level)==="warning"; }).length,
+      items.filter(function(it){ return normalizeRiskLevel(it.risk_level)==="crisis"; }).length
+    ];
+    riskChart = upsertChart(document.getElementById("chart-risk"),{type:"bar",data:{labels:["正常","预警（含关注/干预）","危机"],datasets:[{data:rc,backgroundColor:["#22c55e","#eab308","#ef4444"]}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}},riskChart);
+
+    var riskTrendMap = {};
+    items.forEach(function(it){
+      var d = (it.created_at||"").slice(0,10) || "未知";
+      var rl = normalizeRiskLevel(it.risk_level);
+      if(!riskTrendMap[d]) riskTrendMap[d] = {normal:0, warning:0, crisis:0};
+      riskTrendMap[d][rl] = (riskTrendMap[d][rl] || 0) + 1;
+    });
+    var rLabels = Object.keys(riskTrendMap).sort();
+    var rNormal = rLabels.map(function(d){ return riskTrendMap[d].normal || 0; });
+    var rWarn = rLabels.map(function(d){ return riskTrendMap[d].warning || 0; });
+    var rCrisis = rLabels.map(function(d){ return riskTrendMap[d].crisis || 0; });
+    riskTrendChart = upsertChart(document.getElementById("chart-risk-trend"),{
+      type:"line",
+      data:{
+        labels:rLabels,
+        datasets:[
+          {label:"正常",data:rNormal,borderColor:"#22c55e",backgroundColor:"rgba(34,197,94,.2)",tension:.3},
+          {label:"预警",data:rWarn,borderColor:"#eab308",backgroundColor:"rgba(234,179,8,.2)",tension:.3},
+          {label:"危机",data:rCrisis,borderColor:"#ef4444",backgroundColor:"rgba(239,68,68,.2)",tension:.3}
+        ]
+      },
+      options:{
+        responsive:true,
+        plugins:{legend:{position:"bottom"}},
+        scales:{y:{beginAtZero:true,precision:0},x:{ticks:{maxRotation:60,minRotation:30}}}
+      }
+    },riskTrendChart);
+
+    var rl2=document.getElementById("recent-list"); rl2.innerHTML="";
+    items.slice(0,15).forEach(function(it){
+      var div=document.createElement("div"); div.className="history-item";
+      var risk=(it.risk_level||"normal").toLowerCase();
+      var nr = normalizeRiskLevel(risk);
+      var pc="risk-normal",pt=risk;
+      if(nr==="warning"){pc="risk-warning";}
+      if(nr==="crisis"){pc="risk-crisis";}
+      var who = it.display_name || it.username || it.user_identity || "未知用户";
+      div.innerHTML='<div><strong>'+who+'</strong><span class="risk-pill '+pc+'">'+(risk||"normal")+'</span></div><div class="small-text mt-1">'+((it.user_text||"").substring(0,80))+'</div><div class="small-text">情绪：'+(it.top_emotion||"—")+'</div><div class="small-text text-muted">'+(it.created_at||"")+'</div>';
+      rl2.appendChild(div);
+    });
+  }
+
+  async function refreshOverview(){ try{var d=await loadData();buildCharts(d.items||[]);refreshRiskBoard();}catch(e){console.error(e)} }
+  document.getElementById("refresh").addEventListener("click",refreshOverview);
+  refreshOverview();
+
+  async function loadUsersPage(){
+    var hint = document.getElementById("users-page-hint");
+    var tbody = document.getElementById("users-tbody");
+    var superWrap = document.getElementById("super-create-wrap");
+    var filterRow = document.getElementById("users-filter-bar");
+    if(!authToken){ hint.textContent="请先登录。"; return; }
+    if(!currentUser){
+      try{
+        var mr = await fetch(API_BASE+"/api/v1/auth/me",{headers:authHeaders()});
+        if(mr.ok) currentUser = await mr.json();
+      }catch(e){}
+    }
+    var u = currentUser;
+    if(u && isSuperAdmin(u.role)){
+      superWrap.style.display = "block";
+      if(filterRow) filterRow.style.display = "flex";
+      document.getElementById("th-user-actions").style.display = "";
+      hint.textContent = "超级管理员：可查看全平台用户，并创建校级管理员账号。";
+    }else if(u && isAdminRole(u.role)){
+      superWrap.style.display = "none";
+      if(filterRow) filterRow.style.display = "flex";
+      document.getElementById("th-user-actions").style.display = permissionState.studentProfileView ? "" : "none";
+      hint.textContent = permissionState.studentProfileView
+        ? "校级管理员：可查看本校学生画像，也可给同校管理员授予画像查看权限。"
+        : "校级管理员：以下为本校学生账号列表。若需查看画像，请由上级授予 student_profile_view 权限。";
+    }else{
+      hint.textContent = "无权限。";
+      tbody.innerHTML = "";
+      return;
+    }
+    tbody.innerHTML = '<tr><td colspan="8" class="small-text p-3">加载中…</td></tr>';
+    var url = API_BASE+"/api/v1/admin/users";
+    if(u && isSuperAdmin(u.role)){
+      var rf = document.getElementById("users-role-filter").value;
+      if(rf) url += "?role_filter="+encodeURIComponent(rf);
+    }else if(u && isAdminRole(u.role)){
+      var rf2 = document.getElementById("users-role-filter").value;
+      if(rf2 && (rf2==="student" || rf2==="school_admin")) url += "?role_filter="+encodeURIComponent(rf2);
+    }
+    try{
+      var resp = await fetch(url,{headers:authHeaders()});
+      if(!resp.ok) throw new Error(await resp.text());
+      var data = await resp.json();
+      tbody.innerHTML = "";
+      (data.items||[]).forEach(function(row){
+        var tr = document.createElement("tr");
+        var uid = row.id;
+        var role = row.role||"";
+        var act = "";
+        if(u && isSuperAdmin(u.role)){
+          act = '<button type="button" class="btn btn-outline-secondary btn-sm btn-user-action user-reset-pw me-1" data-uid="'+uid+'"><i class="bi bi-key me-1"></i>重置密码</button>';
+          if(role==="school_admin"){
+            act += '<button type="button" class="btn btn-outline-primary btn-sm btn-user-action user-set-perms" data-uid="'+uid+'" data-uname="'+(row.username||"")+'" data-perms="'+((Array.isArray(row.admin_permissions)?row.admin_permissions:[]).join(","))+'"><i class="bi bi-shield-lock me-1"></i>配置权限</button>';
+          }
+          if(role==="student"){
+            act += '<button type="button" class="btn btn-outline-success btn-sm btn-user-action user-profile ms-1" data-uid="'+uid+'" data-uname="'+(row.username||"")+'"><i class="bi bi-person-lines-fill me-1"></i>个人画像</button>';
+          }
+        }else if(u && isAdminRole(u.role) && permissionState.studentProfileView){
+          if(role==="student"){
+            act += '<button type="button" class="btn btn-outline-success btn-sm btn-user-action user-profile me-1" data-uid="'+uid+'" data-uname="'+(row.username||"")+'"><i class="bi bi-person-lines-fill me-1"></i>个人画像</button>';
+          }else if(role==="school_admin"){
+            act += '<button type="button" class="btn btn-outline-primary btn-sm btn-user-action user-set-perms" data-uid="'+uid+'" data-uname="'+(row.username||"")+'" data-perms="'+((Array.isArray(row.admin_permissions)?row.admin_permissions:[]).join(","))+'"><i class="bi bi-shield-lock me-1"></i>配置权限</button>';
+          }
+        }
+        var perms = Array.isArray(row.admin_permissions) ? row.admin_permissions : [];
+        var permHtml = perms.length ? perms.map(function(p){ return '<span class="perm-chip">'+p+'</span>'; }).join("") : '<span class="small-text text-muted">—</span>';
+        tr.innerHTML = "<td>"+uid+"</td><td>"+(row.username||"")+"</td><td>"+role+"<div class='mt-1'>"+permHtml+"</div></td><td>"+(row.display_name||"")+"</td><td>"+(row.school_id||"")+"</td><td>"+(row.identity_tag||"")+"</td><td class='text-muted'>"+(row.created_at||"")+"</td><td class='text-nowrap'>"+act+"</td>";
+        tbody.appendChild(tr);
+      });
+      tbody.querySelectorAll(".user-reset-pw").forEach(function(btn){
+        btn.addEventListener("click", async function(){
+          var id = parseInt(btn.getAttribute("data-uid"),10);
+          var np = prompt("为用户 #"+id+" 设置新密码（至少4位）：");
+          if(!np || np.length<4) return;
+          var r = await fetch(API_BASE+"/api/v1/admin/users/"+id,{method:"PUT",headers:authJsonHeaders(),body:JSON.stringify({password:np})});
+          if(!r.ok){ alert(await r.text()); return; }
+          alert("已更新密码");
+        });
+      });
+      tbody.querySelectorAll(".user-set-perms").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          openUserPermModal(
+            parseInt(btn.getAttribute("data-uid"),10),
+            btn.getAttribute("data-uname") || "",
+            (btn.getAttribute("data-perms")||"").split(",").map(function(s){ return s.trim(); }).filter(Boolean)
+          );
+        });
+      });
+      tbody.querySelectorAll(".user-profile").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var uid = parseInt(btn.getAttribute("data-uid"),10);
+          var uname = btn.getAttribute("data-uname") || ("#"+uid);
+          openUserProfile(uid, uname);
+        });
+      });
+      if(!(data.items||[]).length) tbody.innerHTML = '<tr><td colspan="8" class="small-text p-3">暂无数据</td></tr>';
+    }catch(e){
+      tbody.innerHTML = '<tr><td colspan="8" class="text-danger small-text p-3">'+e.message+'</td></tr>';
+    }
+  }
+
+  document.getElementById("btn-load-users").addEventListener("click", loadUsersPage);
+  document.getElementById("users-role-filter").addEventListener("change", function(){
+    if(currentUser && isAdminRole(currentUser.role)) loadUsersPage();
+  });
+
+  document.getElementById("btn-create-sa").addEventListener("click", async function(){
+    var msg = document.getElementById("sa-msg");
+    msg.textContent = "";
+    var body = {
+      username: document.getElementById("sa-username").value.trim(),
+      password: document.getElementById("sa-password").value,
+      display_name: document.getElementById("sa-display").value.trim(),
+      school_id: document.getElementById("sa-school").value.trim()
+    };
+    try{
+      var resp = await fetch(API_BASE+"/api/v1/admin/school-admins",{method:"POST",headers:authJsonHeaders(),body:JSON.stringify(body)});
+      var data = await resp.json().catch(function(){return{};});
+      if(!resp.ok){ msg.innerHTML = '<span class="text-danger">'+(data.detail||resp.status)+'</span>'; return; }
+      msg.innerHTML = '<span class="text-success">'+(data.message||"已创建")+'</span>';
+      loadUsersPage();
+    }catch(e){ msg.innerHTML = '<span class="text-danger">'+e.message+'</span>'; }
+  });
+
+  var riskLexModal = null;
+  var userPermModal = null;
+
+  function riskLabelFromScore(s){
+    var n = Number(s||0);
+    if(n>=3) return "crisis";
+    if(n>=2) return "intervention";
+    if(n>=1) return "attention";
+    return "normal";
+  }
+
+  async function openUserProfile(uid, uname){
+    var title = document.getElementById("upf-title");
+    var meta = document.getElementById("upf-meta");
+    var list = document.getElementById("upf-recent-list");
+    title.textContent = uname || ("#"+uid);
+    meta.textContent = "加载中...";
+    list.innerHTML = '<div class="small-text">加载中...</div>';
+    if(!userProfileModal) userProfileModal = new bootstrap.Modal(document.getElementById("userProfileModal"));
+    userProfileModal.show();
+    try{
+      var resp = await fetch(API_BASE+"/api/v1/admin/users/"+uid+"/profile?days=30&recent_limit=20",{headers:authHeaders()});
+      var data = await resp.json().catch(function(){ return {}; });
+      if(!resp.ok) throw new Error(data.detail || ("HTTP "+resp.status));
+      title.textContent = (data.user && (data.user.display_name || data.user.username)) || uname || ("#"+uid);
+      var schoolTxt = data.user && data.user.school_id ? ("学校："+data.user.school_id) : "学校：未填写";
+      meta.textContent = "身份：" + ((data.user && data.user.identity_tag) || "学生") + " · " + schoolTxt;
+
+      var er = Array.isArray(data.emotion_ratio) ? data.emotion_ratio : [];
+      var erLabels = er.map(function(x){ return x.emotion; });
+      var erVals = er.map(function(x){ return Math.round((Number(x.ratio||0))*1000)/10; });
+      userProfileEmotionChart = upsertChart(document.getElementById("upf-emotion-ratio"),{
+        type:"doughnut",
+        data:{labels:erLabels,datasets:[{data:erVals,backgroundColor:["#60a5fa","#f97316","#22c55e","#facc15","#a855f7","#fb7185","#0ea5e9","#94a3b8"]}]},
+        options:{
+          plugins:{
+            legend:{position:"bottom"},
+            tooltip:{callbacks:{label:function(ctx){ return ctx.label + ": " + Number(ctx.raw||0).toFixed(1) + "%"; }}},
+            datalabels:{color:"#0f172a",formatter:function(v){ return Number(v||0).toFixed(0)+"%"; },font:{weight:"bold",size:11}}
+          }
+        },
+        plugins:[ChartDataLabels]
+      },userProfileEmotionChart);
+
+      var t = data.trend || {};
+      var labels = Array.isArray(t.labels) ? t.labels : [];
+      var pvals = Array.isArray(t.emotion_prob) ? t.emotion_prob.map(function(x){ return Math.round(Number(x||0)*1000)/10; }) : [];
+      var ivals = Array.isArray(t.intervention_score) ? t.intervention_score : [];
+      userProfileTrendChart = upsertChart(document.getElementById("upf-trend"),{
+        type:"line",
+        data:{
+          labels:labels,
+          datasets:[
+            {label:"心情概率(%)",data:pvals,borderColor:"#2563eb",backgroundColor:"rgba(37,99,235,.2)",tension:.3,yAxisID:"y"},
+            {label:"干预程度(0-3)",data:ivals,borderColor:"#ef4444",backgroundColor:"rgba(239,68,68,.2)",tension:.3,yAxisID:"y1"}
+          ]
+        },
+        options:{
+          responsive:true,
+          scales:{
+            y:{beginAtZero:true,max:100,position:"left"},
+            y1:{beginAtZero:true,max:3,position:"right",grid:{drawOnChartArea:false}}
+          }
+        }
+      },userProfileTrendChart);
+
+      var recent = Array.isArray(data.recent_conversations) ? data.recent_conversations : [];
+      list.innerHTML = "";
+      if(!recent.length){
+        list.innerHTML = '<div class="small-text text-muted">暂无对话数据</div>';
+      }else{
+        recent.forEach(function(it){
+          var div = document.createElement("div");
+          div.className = "history-item";
+          var risk = (it.risk_level || "normal").toLowerCase();
+          div.innerHTML =
+            '<div><strong>'+(it.top_emotion||"未知")+'</strong><span class="risk-pill risk-'+(risk==="crisis"?"crisis":(risk==="normal"?"normal":"warning"))+'">'+risk+'</span></div>'+
+            '<div class="small-text mt-1">'+(it.user_text||"").substring(0,120)+'</div>'+
+            '<div class="small-text text-muted">心情状态：'+(it.mood_state||"—")+' · 干预程度：'+riskLabelFromScore(it.risk_score)+'</div>'+
+            '<div class="small-text text-muted">'+(it.created_at||"")+'</div>';
+          list.appendChild(div);
+        });
+      }
+    }catch(e){
+      meta.textContent = "加载失败";
+      list.innerHTML = '<div class="small-text text-danger">'+e.message+'</div>';
+    }
+  }
+
+  function openUserPermModal(uid, uname, selectedPerms){
+    document.getElementById("upm-uid").value = String(uid || "");
+    document.getElementById("upm-uname").textContent = uname || ("#"+uid);
+    document.getElementById("upm-msg").textContent = "";
+    var set = new Set(selectedPerms || []);
+    document.querySelectorAll(".upm-perm").forEach(function(chk){
+      chk.checked = set.has(chk.value);
+    });
+    if(!userPermModal) userPermModal = new bootstrap.Modal(document.getElementById("userPermModal"));
+    userPermModal.show();
+  }
+
+  document.getElementById("upm-save").addEventListener("click", async function(){
+    var msg = document.getElementById("upm-msg");
+    var uid = parseInt(document.getElementById("upm-uid").value,10);
+    var perms = [];
+    document.querySelectorAll(".upm-perm:checked").forEach(function(chk){ perms.push(chk.value); });
+    try{
+      var resp = await fetch(API_BASE+"/api/v1/admin/users/"+uid+"/permissions",{
+        method:"PUT", headers:authJsonHeaders(), body:JSON.stringify({permissions:perms})
+      });
+      var data = await resp.json().catch(function(){return{};});
+      if(!resp.ok){
+        msg.innerHTML = '<span class="text-danger">'+(data.detail || "保存失败")+'</span>';
+        return;
+      }
+      if(userPermModal) userPermModal.hide();
+      loadUsersPage();
+    }catch(e){
+      msg.innerHTML = '<span class="text-danger">'+e.message+'</span>';
+    }
+  });
+
+  async function loadRiskLexiconPage(){
+    var tbody = document.getElementById("risk-lex-tbody");
+    var cfgRaw = document.getElementById("risk-lex-config-raw");
+    var banner = document.getElementById("risk-lex-banner");
+    var inpA = document.getElementById("cfg-attention");
+    var inpI = document.getElementById("cfg-intervention");
+    if(!authToken){ banner.classList.remove("d-none"); banner.className="alert alert-warning small py-2 mb-3"; banner.textContent="请先登录。"; return; }
+    if(!currentUser){
+      try{
+        var mr = await fetch(API_BASE+"/api/v1/auth/me",{headers:authHeaders()});
+        if(mr.ok) currentUser = await mr.json();
+      }catch(e){}
+    }
+    permissionState = resolvePermissionState(currentUser||{});
+    if(!currentUser || !permissionState.riskView){
+      banner.classList.remove("d-none"); banner.className="alert alert-danger small py-2 mb-3"; banner.textContent="当前账号暂无风险词查看权限。"; tbody.innerHTML=""; cfgRaw.textContent="—"; return;
+    }
+    banner.classList.add("d-none");
+    document.getElementById("btn-risk-lex-new").style.display = permissionState.riskEdit ? "inline-block" : "none";
+    document.getElementById("btn-risk-cfg-save").disabled = !permissionState.riskManage;
+    document.getElementById("btn-risk-lex-reload").disabled = !permissionState.riskManage;
+    tbody.innerHTML = '<tr><td colspan="7" class="small-text p-3">加载中…</td></tr>';
+    try{
+      var resp = await fetch(API_BASE+"/api/v1/admin/risk-lexicon",{headers:authHeaders()});
+      var data = await resp.json().catch(function(){return{};});
+      if(!resp.ok) throw new Error(typeof data.detail==="string"?data.detail:JSON.stringify(data.detail||data));
+      if(data.hint){
+        banner.classList.remove("d-none"); banner.className="alert alert-info small py-2 mb-3"; banner.textContent=data.hint;
+        document.getElementById("btn-risk-lex-new").disabled = true;
+      } else {
+        document.getElementById("btn-risk-lex-new").disabled = false;
+      }
+      var cfg = data.config||{};
+      cfgRaw.textContent = Object.keys(cfg).length ? JSON.stringify(cfg,null,2) : "（无 risk_config）";
+      inpA.value = cfg.attention_threshold != null ? cfg.attention_threshold : "0.35";
+      inpI.value = cfg.intervention_threshold != null ? cfg.intervention_threshold : "0.52";
+      tbody.innerHTML = "";
+      (data.items||[]).forEach(function(row){
+        var tr = document.createElement("tr");
+        var act = row.is_active===true||row.is_active===1||row.is_active==="1" ? "是" : "否";
+        var ph = (row.phrase||"").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+        var rid = row.id;
+        tr.innerHTML = "<td>"+rid+"</td><td><code>"+(row.category||"")+"</code></td><td style='max-width:280px;word-break:break-all'>"+ph+"</td><td>"+act+"</td><td>"+(row.sort_order!=null?row.sort_order:"")+"</td><td class='text-muted'>"+(row.created_at||"")+"</td><td></td>";
+        var tdAct = tr.lastElementChild;
+        if(permissionState.riskEdit){
+          var b1 = document.createElement("button"); b1.type="button"; b1.className="btn btn-link btn-sm p-0 me-2"; b1.textContent="编辑";
+          b1.addEventListener("click", function(){ openRiskLexModalEdit(row); });
+          tdAct.appendChild(b1);
+        }
+        if(permissionState.riskManage){
+          var b2 = document.createElement("button"); b2.type="button"; b2.className="btn btn-link btn-sm text-danger p-0"; b2.textContent="删除";
+          b2.addEventListener("click", function(){ deleteRiskLexRow(rid); });
+          tdAct.appendChild(b2);
+        }
+        tbody.appendChild(tr);
+      });
+      if(!(data.items||[]).length){
+        tbody.innerHTML = '<tr><td colspan="7" class="small-text p-3">暂无词表数据（未配数据库时使用代码内置词表，无法在此页编辑）。</td></tr>';
+      }
+    }catch(e){
+      tbody.innerHTML = '<tr><td colspan="7" class="text-danger small-text p-3">'+e.message+'</td></tr>';
+      cfgRaw.textContent = "—";
+    }
+  }
+
+  function openRiskLexModalNew(){
+    if(!permissionState.riskEdit){ alert("当前账号暂无风险词编辑权限。"); return; }
+    document.getElementById("riskLexModalTitle").textContent = "新增词条";
+    document.getElementById("rl-edit-id").value = "";
+    document.getElementById("rl-cat").value = "crisis_zh";
+    document.getElementById("rl-phrase").value = "";
+    document.getElementById("rl-sort").value = "0";
+    document.getElementById("rl-active").checked = true;
+    document.getElementById("rl-modal-msg").textContent = "";
+    if(!riskLexModal) riskLexModal = new bootstrap.Modal(document.getElementById("riskLexModal"));
+    riskLexModal.show();
+  }
+
+  function openRiskLexModalEdit(row){
+    if(!permissionState.riskEdit){ alert("当前账号暂无风险词编辑权限。"); return; }
+    document.getElementById("riskLexModalTitle").textContent = "编辑 #"+row.id;
+    document.getElementById("rl-edit-id").value = String(row.id);
+    document.getElementById("rl-cat").value = row.category || "negative";
+    document.getElementById("rl-phrase").value = row.phrase || "";
+    document.getElementById("rl-sort").value = row.sort_order != null ? row.sort_order : 0;
+    document.getElementById("rl-active").checked = !!(row.is_active===true||row.is_active===1||row.is_active==="1");
+    document.getElementById("rl-modal-msg").textContent = "";
+    if(!riskLexModal) riskLexModal = new bootstrap.Modal(document.getElementById("riskLexModal"));
+    riskLexModal.show();
+  }
+
+  async function deleteRiskLexRow(id){
+    if(!permissionState.riskManage){ alert("当前账号暂无风险词管理权限。"); return; }
+    if(!confirm("确定删除 ID="+id+" ？")) return;
+    try{
+      var resp = await fetch(API_BASE+"/api/v1/admin/risk-lexicon/"+id,{method:"DELETE",headers:authHeaders()});
+      var data = await resp.json().catch(function(){return{};});
+      if(!resp.ok) throw new Error(data.detail||resp.status);
+      alert(data.message||"已删除");
+      loadRiskLexiconPage();
+    }catch(e){ alert(e.message||String(e)); }
+  }
+
+  document.getElementById("btn-risk-lex-new").addEventListener("click", openRiskLexModalNew);
+  document.getElementById("rl-modal-save").addEventListener("click", async function(){
+    if(!permissionState.riskEdit){ alert("当前账号暂无风险词编辑权限。"); return; }
+    var msg = document.getElementById("rl-modal-msg");
+    msg.textContent = "";
+    var eid = document.getElementById("rl-edit-id").value.trim();
+    var body = {
+      phrase: document.getElementById("rl-phrase").value.trim(),
+      category: document.getElementById("rl-cat").value,
+      is_active: document.getElementById("rl-active").checked,
+      sort_order: parseInt(document.getElementById("rl-sort").value,10)||0
+    };
+    if(!body.phrase){ msg.textContent="请填写词条"; msg.style.color="#ef4444"; return; }
+    try{
+      var url, method;
+      if(eid){
+        url = API_BASE+"/api/v1/admin/risk-lexicon/"+eid;
+        method = "PUT";
+      }else{
+        url = API_BASE+"/api/v1/admin/risk-lexicon";
+        method = "POST";
+      }
+      var resp = await fetch(url,{method:method,headers:authJsonHeaders(),body:JSON.stringify(body)});
+      var data = await resp.json().catch(function(){return{};});
+      if(!resp.ok) throw new Error(typeof data.detail==="string"?data.detail:JSON.stringify(data.detail||data));
+      if(riskLexModal) riskLexModal.hide();
+      loadRiskLexiconPage();
+    }catch(e){ msg.textContent=e.message; msg.style.color="#ef4444"; }
+  });
+
+  document.getElementById("btn-risk-cfg-save").addEventListener("click", async function(){
+    if(!permissionState.riskManage){ alert("当前账号暂无风险词管理权限。"); return; }
+    var btn = document.getElementById("btn-risk-cfg-save");
+    btn.disabled = true;
+    try{
+      var body = {
+        attention_threshold: parseFloat(document.getElementById("cfg-attention").value),
+        intervention_threshold: parseFloat(document.getElementById("cfg-intervention").value)
+      };
+      if(isNaN(body.attention_threshold)||isNaN(body.intervention_threshold)){ alert("请输入有效数字"); return; }
+      var resp = await fetch(API_BASE+"/api/v1/admin/risk-config",{method:"PUT",headers:authJsonHeaders(),body:JSON.stringify(body)});
+      var data = await resp.json().catch(function(){return{};});
+      if(!resp.ok) throw new Error(data.detail||resp.status);
+      alert(data.message||"已保存");
+      loadRiskLexiconPage();
+    }catch(e){ alert(e.message||String(e)); }
+    finally{ btn.disabled = false; }
+  });
+
+  document.getElementById("btn-risk-lex-refresh").addEventListener("click", loadRiskLexiconPage);
+  document.getElementById("btn-risk-lex-reload").addEventListener("click", async function(){
+    var btn = document.getElementById("btn-risk-lex-reload");
+    if(!authToken){ alert("请先登录"); return; }
+    if(!permissionState.riskManage){ alert("当前账号暂无风险词管理权限。"); return; }
+    btn.disabled = true;
+    try{
+      var resp = await fetch(API_BASE+"/api/v1/admin/risk-lexicon/reload",{method:"POST",headers:authHeaders()});
+      var data = await resp.json().catch(function(){return{};});
+      if(!resp.ok) throw new Error(data.detail||resp.status);
+      alert(data.message||"已重新加载");
+    }catch(e){ alert(e.message||String(e)); }
+    finally{ btn.disabled = false; }
+  });
+
+  var OPT_PHQ = [{"value":0,"label":"完全没有"},{"value":1,"label":"有几天"},{"value":2,"label":"一半以上天数"},{"value":3,"label":"几乎每天"}];
+  var LIKERT5_LABELS = ["完全不符合","不太符合","一般","比较符合","完全符合"];
+  var DEFAULT_RULES = {
+    ranges: [
+      {min:0,max:8,level:"偏低",suggestion:"整体状态相对平稳，可继续保持良好习惯。"},
+      {min:9,max:99,level:"偏高",suggestion:"建议关注情绪变化，必要时寻求心理咨询支持。"}
+    ]
+  };
+  var PHQ9_QUESTIONS = [
+    "做事情提不起兴趣，或觉得做什么都没意思",
+    "感到心情低落、沮丧或绝望",
+    "入睡困难、容易醒来，或睡得太多",
+    "感到疲倦或精力不足",
+    "食欲不振或吃得过多",
+    "对自己感到不好，或者觉得自己很失败，或让家人/自己失望",
+    "做事时难以集中注意力，例如看书或看手机时容易走神",
+    "行动或说话比平时慢很多，或者相反——坐立不安、动来动去",
+    "有过觉得活着太痛苦、不如不活了，或产生伤害自己的念头"
+  ];
+
+  function escAttr(s){
+    return String(s||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+  }
+
+  function escHtml(s){
+    return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
+  function formatSurveyForView(q){
+    var h = "<div class=\"mb-2\"><strong>标题</strong>：" + escHtml(q.title || "") + "</div>";
+    if(q.description){
+      h += "<div class=\"mb-2 text-muted\">" + escHtml(q.description) + "</div>";
+    }
+    h += "<div class=\"mb-2 small\">分数乘数：" + (q.score_multiplier != null ? q.score_multiplier : 1) + "</div>";
+    var rules = q.scoring_rules;
+    if(typeof rules === "string"){ try{ rules = JSON.parse(rules); }catch(e){ rules = null; } }
+    if(rules && rules.ranges && rules.ranges.length){
+      h += "<div class=\"fw-bold mt-3 mb-1\">评分分档</div><ul class=\"small mb-0 ps-3\">";
+      rules.ranges.forEach(function(r){
+        h += "<li>" + r.min + "–" + r.max + " 分：<strong>" + escHtml(r.level) + "</strong>";
+        if(r.suggestion && String(r.suggestion).trim()) h += " — " + escHtml(r.suggestion);
+        h += "</li>";
+      });
+      h += "</ul>";
+    }
+    var items = q.items || [];
+    h += "<div class=\"fw-bold mt-3 mb-1\">题目（" + items.length + " 道）</div><ol class=\"small mb-0 ps-3\">";
+    items.forEach(function(it){
+      h += "<li class=\"mb-2\">" + escHtml(it.question_text || "");
+      var opts = it.options;
+      if(typeof opts === "string"){ try{ opts = JSON.parse(opts); }catch(e){ opts = []; } }
+      h += "<ul class=\"mb-0 mt-1\">";
+      (opts || []).forEach(function(o){
+        h += "<li>" + o.value + " 分：" + escHtml(o.label || "") + "</li>";
+      });
+      h += "</ul>";
+      if(it.is_reverse || it.reverse_scored) h += "<div class=\"text-muted fst-italic mt-1\">本题反向计分</div>";
+      h += "</li>";
+    });
+    h += "</ol>";
+    return h;
+  }
+
+  function syncRulesJsonTextarea(rulesObj){
+    var ta = document.getElementById("sq-rules");
+    if(ta) ta.value = JSON.stringify(rulesObj && rulesObj.ranges ? rulesObj : {ranges:[]}, null, 2);
+  }
+
+  function addRuleRow(min, max, level, suggestion){
+    var wrap = document.getElementById("sq-rules-ranges-wrap");
+    var row = document.createElement("div");
+    row.className = "row g-2 align-items-end sq-rule-row mb-2 p-2 rounded";
+    row.innerHTML =
+      '<div class="col-6 col-md-2"><label class="small-text d-block mb-0">最低分</label><input type="number" class="form-control form-control-sm sq-r-min" value="'+(min!=null?min:0)+'"/></div>'+
+      '<div class="col-6 col-md-2"><label class="small-text d-block mb-0">最高分</label><input type="number" class="form-control form-control-sm sq-r-max" value="'+(max!=null?max:0)+'"/></div>'+
+      '<div class="col-12 col-md-3"><label class="small-text d-block mb-0">等级名称</label><input type="text" class="form-control form-control-sm sq-r-level" value="'+escAttr(level)+'"/></div>'+
+      '<div class="col-12 col-md-4"><label class="small-text d-block mb-0">建议语</label><input type="text" class="form-control form-control-sm sq-r-sug" value="'+escAttr(suggestion)+'"/></div>'+
+      '<div class="col-12 col-md-1 text-md-end"><button type="button" class="btn btn-outline-danger btn-sm sq-remove-rule mt-1">删除</button></div>';
+    row.querySelector(".sq-remove-rule").addEventListener("click", function(){ row.remove(); });
+    wrap.appendChild(row);
+  }
+
+  function renderRulesRanges(ranges){
+    var wrap = document.getElementById("sq-rules-ranges-wrap");
+    wrap.innerHTML = "";
+    var list = (ranges && ranges.length) ? ranges : DEFAULT_RULES.ranges;
+    list.forEach(function(r){ addRuleRow(r.min, r.max, r.level, r.suggestion); });
+    try{ syncRulesJsonTextarea({ranges: collectRulesFromUI().ranges}); }catch(e){ syncRulesJsonTextarea({ranges:list}); }
+  }
+
+  function collectRulesFromUI(){
+    var rows = document.querySelectorAll("#sq-rules-ranges-wrap .sq-rule-row");
+    var ranges = [];
+    for(var i=0;i<rows.length;i++){
+      var row = rows[i];
+      var min = parseInt(row.querySelector(".sq-r-min").value,10);
+      var max = parseInt(row.querySelector(".sq-r-max").value,10);
+      var level = row.querySelector(".sq-r-level").value.trim();
+      var sug = row.querySelector(".sq-r-sug").value.trim();
+      if(!level && !sug) continue;
+      if(isNaN(min) || isNaN(max)) throw new Error("分档第 "+(i+1)+" 行：请填写有效的最低分与最高分（整数）");
+      if(min > max) throw new Error("分档第 "+(i+1)+" 行：最低分不能大于最高分");
+      if(!level) throw new Error("分档第 "+(i+1)+" 行：请填写等级名称");
+      ranges.push({min:min, max:max, level:level, suggestion:sug||" "});
+    }
+    if(!ranges.length) throw new Error("请至少保留一行评分分档");
+    return {ranges: ranges};
+  }
+
+  function detectOptMode(opts){
+    if(!opts || !opts.length) return "phq4";
+    if(opts.length===4 && Number(opts[0].value)===0 && Number(opts[3].value)===3) return "phq4";
+    if(opts.length===5 && Number(opts[0].value)===1 && Number(opts[4].value)===5) return "likert5";
+    return "custom";
+  }
+
+  function buildPhqGridHtml(){
+    var h = '<div class="sq-phq-grid mt-1">';
+    for(var i=0;i<4;i++){
+      h += '<div><label class="small-text d-block mb-0">分值 '+i+' 显示为</label><input type="text" class="form-control form-control-sm sq-phq-label" data-idx="'+i+'"/></div>';
+    }
+    h += "</div>";
+    return h;
+  }
+
+  function buildLikertGridHtml(){
+    var h = '<div class="sq-phq-grid mt-1">';
+    for(var i=0;i<5;i++){
+      var v = i+1;
+      h += '<div><label class="small-text d-block mb-0">分值 '+v+'</label><input type="text" class="form-control form-control-sm sq-likert-label" data-v="'+v+'"/></div>';
+    }
+    h += "</div>";
+    return h;
+  }
+
+  function wireQuestionRowOptMode(row){
+    var sel = row.querySelector(".sq-opt-mode");
+    function sync(){
+      var m = sel.value;
+      row.querySelector(".sq-opt-phq-wrap").style.display = (m==="phq4") ? "block" : "none";
+      row.querySelector(".sq-opt-likert-wrap").style.display = (m==="likert5") ? "block" : "none";
+      row.querySelector(".sq-opt-custom-wrap").style.display = (m==="custom") ? "block" : "none";
+    }
+    sel.addEventListener("change", sync);
+    sync();
+  }
+
+  function fillPhqLabels(row, opts){
+    var ins = row.querySelectorAll(".sq-phq-label");
+    for(var i=0;i<4;i++){
+      var o = opts[i]||{};
+      if(ins[i]) ins[i].value = o.label || (OPT_PHQ[i]&&OPT_PHQ[i].label) || "";
+    }
+  }
+
+  function fillLikertLabels(row, opts){
+    var ins = row.querySelectorAll(".sq-likert-label");
+    for(var i=0;i<5;i++){
+      var o = opts[i]||{};
+      if(ins[i]) ins[i].value = o.label || LIKERT5_LABELS[i] || "";
+    }
+  }
+
+  function collectOptionsFromRow(r, idx){
+    var mode = r.querySelector(".sq-opt-mode").value;
+    if(mode==="phq4"){
+      var out = [];
+      var labs = r.querySelectorAll(".sq-phq-label");
+      for(var i=0;i<4;i++){
+        var lab = labs[i] ? labs[i].value.trim() : "";
+        if(!lab) throw new Error("第 "+(idx+1)+" 题：请填写四档选项文字");
+        out.push({value:i, label:lab});
+      }
+      return out;
+    }
+    if(mode==="likert5"){
+      var out2 = [];
+      var labs2 = r.querySelectorAll(".sq-likert-label");
+      for(var j=0;j<5;j++){
+        var lab2 = labs2[j] ? labs2[j].value.trim() : "";
+        if(!lab2) throw new Error("第 "+(idx+1)+" 题：请填写五档选项文字");
+        out2.push({value:j+1, label:lab2});
+      }
+      return out2;
+    }
+    var raw = r.querySelector(".sq-opt-customlines").value.trim();
+    if(!raw) throw new Error("第 "+(idx+1)+" 题：自定义模式请填写选项（每行 分值|文字）");
+    var lines = raw.split(/\r?\n/);
+    var opts = [];
+    for(var k=0;k<lines.length;k++){
+      var line = lines[k].trim();
+      if(!line) continue;
+      var p = line.indexOf("|");
+      if(p<0) throw new Error("第 "+(idx+1)+" 题：第 "+(k+1)+" 行格式应为 分值|选项文字");
+      var val = parseInt(line.slice(0,p).trim(),10);
+      var lb = line.slice(p+1).trim();
+      if(isNaN(val) || !lb) throw new Error("第 "+(idx+1)+" 题：第 "+(k+1)+" 行无效");
+      opts.push({value:val, label:lb});
+    }
+    if(!opts.length) throw new Error("第 "+(idx+1)+" 题：至少解析出一行有效选项");
+    return opts;
+  }
+
+  function addQuestionRow(questionText, optionsArray, isReverse){
+    var wrap = document.getElementById("sq-questions-wrap");
+    var row = document.createElement("div");
+    row.className = "survey-q-row";
+    var opts = optionsArray;
+    if(opts==null || (Array.isArray(opts)&&!opts.length)) opts = OPT_PHQ.slice();
+    if(typeof opts==="string"){
+      try{ opts = JSON.parse(opts); }catch(e){ opts = OPT_PHQ.slice(); }
+    }
+    var mode = detectOptMode(opts);
+    var customDefault = mode==="custom" ? opts.map(function(o){ return o.value+"|"+(o.label||""); }).join("\n") : "";
+
+    row.innerHTML =
+      '<div class="d-flex justify-content-between align-items-center mb-2">'+
+        '<span class="small-text fw-bold text-secondary">题目</span>'+
+        '<button type="button" class="btn btn-link btn-sm text-danger p-0 sq-remove-q">移除本题</button>'+
+      '</div>'+
+      '<textarea class="form-control form-control-sm mb-2 sq-qtext" rows="2" placeholder="请输入题干"></textarea>'+
+      '<div class="row g-2 align-items-end mb-2">'+
+        '<div class="col-md-8">'+
+          '<label class="small-text mb-0 d-block">选项形式</label>'+
+          '<select class="form-select form-select-sm sq-opt-mode">'+
+            '<option value="phq4">四档（0–3 分，PHQ/GAD 常用）</option>'+
+            '<option value="likert5">五档（1–5 分）</option>'+
+            '<option value="custom">自定义（每行：分值|文字）</option>'+
+          '</select>'+
+        '</div>'+
+        '<div class="col-md-4">'+
+          '<label class="small-text d-flex align-items-center gap-2 mb-0"><input type="checkbox" class="sq-reverse"/> 反向计分</label>'+
+        '</div>'+
+      '</div>'+
+      '<div class="sq-opt-phq-wrap">'+buildPhqGridHtml()+"</div>"+
+      '<div class="sq-opt-likert-wrap" style="display:none">'+buildLikertGridHtml()+"</div>"+
+      '<div class="sq-opt-custom-wrap" style="display:none"><textarea class="form-control form-control-sm sq-opt-customlines" rows="4" placeholder="每行一条，例如：&#10;0|一点也不&#10;1|有一点"></textarea></div>';
+
+    row.querySelector(".sq-qtext").value = questionText || "";
+    row.querySelector(".sq-opt-mode").value = mode;
+    if(mode==="phq4") fillPhqLabels(row, opts);
+    else if(mode==="likert5") fillLikertLabels(row, opts);
+    else row.querySelector(".sq-opt-customlines").value = customDefault;
+
+    if(isReverse) row.querySelector(".sq-reverse").checked = true;
+    row.querySelector(".sq-remove-q").addEventListener("click", function(){ row.remove(); });
+    wireQuestionRowOptMode(row);
+    wrap.appendChild(row);
+  }
+
+  function clearSurveyForm(){
+    document.getElementById("editing-survey-id").value = "";
+    document.getElementById("survey-form-title").textContent = "新建问卷";
+    document.getElementById("btn-sq-submit").textContent = "创建问卷";
+    document.getElementById("btn-sq-cancel-edit").style.display = "none";
+    document.getElementById("sq-title").value = "";
+    document.getElementById("sq-desc").value = "";
+    document.getElementById("sq-multiplier").value = "1";
+    renderRulesRanges(DEFAULT_RULES.ranges);
+    document.getElementById("sq-questions-wrap").innerHTML = "";
+    document.getElementById("sq-form-msg").textContent = "";
+  }
+
+  clearSurveyForm();
+
+  document.getElementById("btn-sq-add-rule").addEventListener("click", function(){ addRuleRow(0, 0, "", ""); });
+  document.getElementById("btn-sq-rules-from-json").addEventListener("click", function(){
+    var msg = document.getElementById("sq-form-msg");
+    msg.textContent = "";
+    try{
+      var txt = document.getElementById("sq-rules").value.trim();
+      var obj = txt ? JSON.parse(txt) : {};
+      var ranges = obj.ranges;
+      if(!Array.isArray(ranges) || !ranges.length){ msg.innerHTML = '<span class="text-danger">JSON 中需包含 ranges 数组</span>'; return; }
+      renderRulesRanges(ranges);
+      msg.innerHTML = '<span class="text-success">已从 JSON 加载到表格</span>';
+    }catch(e){ msg.innerHTML = '<span class="text-danger">JSON 解析失败：'+e.message+'</span>'; }
+  });
+
+  document.getElementById("btn-sq-add-q").addEventListener("click", function(){ addQuestionRow("", null, false); });
+  document.getElementById("btn-sq-template-phq").addEventListener("click", function(){
+    PHQ9_QUESTIONS.forEach(function(q){ addQuestionRow(q, OPT_PHQ, false); });
+  });
+  document.getElementById("btn-sq-clear-form").addEventListener("click", clearSurveyForm);
+  document.getElementById("btn-sq-cancel-edit").addEventListener("click", clearSurveyForm);
+
+  function collectSurveyPayload(){
+    var title = document.getElementById("sq-title").value.trim();
+    var desc = document.getElementById("sq-desc").value.trim();
+    var mult = parseFloat(document.getElementById("sq-multiplier").value) || 1;
+    var rules = collectRulesFromUI();
+    syncRulesJsonTextarea(rules);
+    var qrows = document.querySelectorAll("#sq-questions-wrap .survey-q-row");
+    var items = [];
+    for(var i=0;i<qrows.length;i++){
+      var r = qrows[i];
+      var qt = r.querySelector(".sq-qtext").value.trim();
+      if(!qt) continue;
+      var opts = collectOptionsFromRow(r, i);
+      items.push({
+        question_text: qt,
+        options: opts,
+        is_reverse: r.querySelector(".sq-reverse").checked
+      });
+    }
+    if(!title) throw new Error("请填写问卷标题");
+    if(!items.length) throw new Error("请至少添加一道题目并填写题干");
+    return { title: title, description: desc, scoring_rules: rules, score_multiplier: mult, items: items };
+  }
+
+  document.getElementById("btn-sq-submit").addEventListener("click", async function(){
+    var msg = document.getElementById("sq-form-msg");
+    msg.textContent = "";
+    if(!permissionState.surveyManage){
+      msg.innerHTML = '<span class="text-danger">当前账号无问卷编辑权限，请联系超级管理员授权。</span>';
+      return;
+    }
+    var payload;
+    try{ payload = collectSurveyPayload(); }
+    catch(e){ msg.innerHTML = '<span class="text-danger">'+e.message+'</span>'; return; }
+    var eid = document.getElementById("editing-survey-id").value;
+    var url = eid ? (API_BASE+"/api/v1/survey/"+eid) : (API_BASE+"/api/v1/survey/create");
+    var method = eid ? "PUT" : "POST";
+    try{
+      var resp = await fetch(url, { method: method, headers: authJsonHeaders(), body: JSON.stringify(payload) });
+      var data = await resp.json().catch(function(){return{};});
+      if(!resp.ok){
+        var det = data.detail;
+        var err = typeof det === "string" ? det : (Array.isArray(det) ? det.map(function(x){ return x.msg || JSON.stringify(x); }).join("; ") : JSON.stringify(det || data));
+        msg.innerHTML = '<span class="text-danger">'+(err || "保存失败")+'</span>';
+        return;
+      }
+      msg.innerHTML = '<span class="text-success">'+(data.message||"已保存")+'</span>';
+      clearSurveyForm();
+      loadAdminSurveys();
+    }catch(e){ msg.innerHTML = '<span class="text-danger">网络错误：'+e.message+'</span>'; }
+  });
+
+  async function loadAdminSurveys(){
+    var container = document.getElementById("survey-list-admin");
+    applySurveyPermissionUI();
+    if(!permissionState.surveyView){
+      container.innerHTML = '<div class="small-text">当前账号暂无问卷查看权限。</div>';
+      return;
+    }
+    container.innerHTML = '<div class="small-text">加载中...</div>';
+    var resp = await fetch(API_BASE+"/api/v1/survey/all",{headers:authHeaders()});
+    if(!resp.ok){
+      var hint = resp.status === 401 || resp.status === 403
+        ? "请使用管理员账号重新登录后再试。"
+        : "请稍后重试或联系技术支持。";
+      container.innerHTML = '<div class="text-danger small-text">问卷列表加载失败（'+resp.status+'）。'+hint+'</div>';
+      return;
+    }
+    var data = await resp.json();
+    renderSurveyList(data.items||[], container);
+
+    var filterSel = document.getElementById("result-filter-qid");
+    filterSel.innerHTML = '<option value="">全部问卷</option>';
+    (data.items||[]).forEach(function(q){
+      var opt = document.createElement("option");
+      opt.value = q.id;
+      opt.textContent = q.title;
+      filterSel.appendChild(opt);
+    });
+  }
+
+  function renderSurveyList(items, container){
+    container.innerHTML = "";
+    if(!items.length){ container.innerHTML = '<div class="small-text">暂无问卷</div>'; return; }
+    var canManage = !!permissionState.surveyManage;
+    items.forEach(function(q){
+      var div = document.createElement("div");
+      div.className = "q-card";
+      var st = q.is_active ? '<span class="badge bg-success">启用</span>' : '<span class="badge bg-secondary">已停用</span>';
+      var actionHtml = '<button type="button" class="btn btn-outline-primary btn-sm sq-view" data-qid="'+q.id+'">查看</button>';
+      if(canManage){
+        actionHtml += '<button type="button" class="btn btn-outline-secondary btn-sm sq-edit" data-qid="'+q.id+'">编辑</button>';
+        actionHtml += '<button type="button" class="btn btn-outline-secondary btn-sm sq-toggle" data-qid="'+q.id+'">'+(q.is_active?"停用":"启用")+'</button>';
+      }
+      div.innerHTML =
+        '<div class="d-flex flex-wrap justify-content-between align-items-start gap-2">'+
+          '<div><strong>'+q.title+'</strong> '+st+' <span class="small-text ms-1">#'+q.id+' · '+q.item_count+' 题</span></div>'+
+          '<div class="d-flex flex-wrap gap-1">'+
+            actionHtml+
+          '</div>'+
+        '</div>'+
+        '<div class="small-text mt-1">'+(q.description||"")+'</div>';
+      container.appendChild(div);
+    });
+    if(canManage){
+      container.querySelectorAll(".sq-toggle").forEach(function(btn){
+        btn.addEventListener("click", async function(){
+          await fetch(API_BASE+"/api/v1/survey/"+btn.getAttribute("data-qid")+"/toggle",{method:"PUT",headers:authJsonHeaders()});
+          loadAdminSurveys();
+        });
+      });
+    }
+    container.querySelectorAll(".sq-view").forEach(function(btn){
+      btn.addEventListener("click", async function(){
+        var qid = btn.getAttribute("data-qid");
+        var r = await fetch(API_BASE+"/api/v1/survey/"+qid);
+        var q = await r.json();
+        document.getElementById("surveyViewTitle").textContent = q.title || "问卷";
+        document.getElementById("surveyViewBody").innerHTML = formatSurveyForView(q);
+        new bootstrap.Modal(document.getElementById("surveyViewModal")).show();
+      });
+    });
+    if(canManage){
+      container.querySelectorAll(".sq-edit").forEach(function(btn){
+        btn.addEventListener("click", async function(){
+          var qid = btn.getAttribute("data-qid");
+          var r = await fetch(API_BASE+"/api/v1/survey/"+qid);
+          if(!r.ok){ alert("加载失败"); return; }
+          var q = await r.json();
+          document.getElementById("editing-survey-id").value = qid;
+          document.getElementById("survey-form-title").textContent = "编辑问卷 #"+qid;
+          document.getElementById("btn-sq-submit").textContent = "保存修改";
+          document.getElementById("btn-sq-cancel-edit").style.display = "inline-block";
+          document.getElementById("sq-title").value = q.title||"";
+          document.getElementById("sq-desc").value = q.description||"";
+          document.getElementById("sq-multiplier").value = String(q.score_multiplier!=null?q.score_multiplier:1);
+          var rules = q.scoring_rules;
+          if(typeof rules==="string"){ try{rules=JSON.parse(rules)}catch(e){rules={}} }
+          renderRulesRanges((rules && rules.ranges) || []);
+          document.getElementById("sq-questions-wrap").innerHTML = "";
+          (q.items||[]).forEach(function(it){
+            var opts = it.options;
+            if(typeof opts==="string"){ try{opts=JSON.parse(opts)}catch(e){opts=[]} }
+            addQuestionRow(it.question_text||"", opts, !!it.is_reverse);
+          });
+          document.getElementById("sq-form-msg").textContent = "";
+          document.getElementById("page-surveys").scrollIntoView({behavior:"smooth"});
+        });
+      });
+    }
+  }
+
+  document.getElementById("btn-refresh-surveys").addEventListener("click", loadAdminSurveys);
+
+  document.getElementById("btn-load-results").addEventListener("click", async function(){
+    var list = document.getElementById("survey-results-list");
+    if(!permissionState.surveyResults){
+      list.innerHTML = '<div class="small-text">当前账号无答卷查看权限。</div>';
+      return;
+    }
+    list.innerHTML = '<div class="small-text">加载中...</div>';
+    var qid = document.getElementById("result-filter-qid").value;
+    var url = API_BASE+"/api/v1/survey/results/list?limit=100"+(qid?"&questionnaire_id="+qid:"");
+    try{
+      var resp = await fetch(url,{headers:authHeaders()});
+      if(!resp.ok) throw new Error(await resp.text());
+      var data = await resp.json();
+      list.innerHTML = "";
+      (data.items||[]).forEach(function(r){
+        var div = document.createElement("div"); div.className = "history-item";
+        div.innerHTML = '<div><strong>'+(r.questionnaire_title||"问卷#"+r.questionnaire_id)+'</strong> <span class="badge bg-info">'+(r.result_level||"")+'</span></div><div class="small-text">用户：'+(r.display_name||r.username||"匿名")+'  |  粗分：'+r.raw_score+'  |  标准分：'+r.standard_score+'</div><div class="small-text text-muted">'+(r.created_at||"")+'</div>';
+        list.appendChild(div);
+      });
+      if(!(data.items||[]).length) list.innerHTML = '<div class="small-text">暂无答卷记录</div>';
+    }catch(e){ list.innerHTML = '<div class="text-danger small-text">'+e.message+'</div>'; }
+  });
+
+  async function loadFullConversations(){
+    var list = document.getElementById("conv-full-list");
+    list.innerHTML = '<div class="small-text">加载中...</div>';
+    try{
+      var data = await loadData();
+      list.innerHTML = "";
+      (data.items||[]).forEach(function(it){
+        var div=document.createElement("div"); div.className="history-item";
+        var risk=(it.risk_level||"normal").toLowerCase();
+        var nr = normalizeRiskLevel(risk);
+        var pc="risk-normal";
+        if(nr==="warning"){pc="risk-warning";}
+        if(nr==="crisis"){pc="risk-crisis";}
+        var who = it.display_name || it.username || it.user_identity || "未知用户";
+        div.innerHTML='<div><strong>'+who+'</strong><span class="risk-pill '+pc+'">'+(risk||"normal")+'</span><span class="small-text ms-2">'+(it.created_at||"")+'</span></div><div class="mt-1" style="font-size:13px">'+(it.user_text||"")+'</div><div class="small-text">情绪：'+(it.top_emotion||"—")+'</div>';
+        list.appendChild(div);
+      });
+      if(!(data.items||[]).length) list.innerHTML = '<div class="small-text">暂无对话记录</div>';
+    }catch(e){ list.innerHTML = '<div class="text-danger small-text">'+e.message+'</div>'; }
+  }
+  document.getElementById("btn-refresh-conv").addEventListener("click",loadFullConversations);
+  loadFullConversations();
+
+})();
+</script>
+</body>
+</html>

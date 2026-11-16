@@ -1,0 +1,1895 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>校园智心守护 · 演示展示</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    :root{--primary:#2563eb;--secondary:#14b8a6;--bg:#f3f4f6;--panel:#ffffff;--text-main:#111827;--text-muted:#6b7280;--border:#e5e7eb;--accent-warm:#f472b6;--sidebar-bg:#fff;--grad-chat:linear-gradient(135deg,#4f46e5,#06b6d4)}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at top,#e0f2fe 0,#eef2ff 40%,#f9fafb 100%);color:var(--text-main);min-height:100vh;transition:background .35s ease, color .2s}
+    body[data-ui-theme="kid"]{--primary:#ec4899;--secondary:#22d3ee;--accent-warm:#fbbf24;--sidebar-bg:linear-gradient(180deg,#fff7ed,#fef3c7);--grad-chat:linear-gradient(135deg,#f472b6,#22d3ee);background:radial-gradient(ellipse at 20% 0%,#fce7f3 0,#fef9c3 45%,#e0f2fe 100%);font-family:"Segoe UI","PingFang SC",sans-serif}
+    body[data-ui-theme="kid"] .sidebar{background:#fff8f0;border-right-color:#fcd34d}
+    body[data-ui-theme="kid"] .brand-logo{animation:pulse 2.2s ease-in-out infinite}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+    body[data-ui-theme="teen"]{--primary:#7c3aed;--secondary:#06b6d4;--sidebar-bg:#f5f3ff;background:radial-gradient(circle at 80% 10%,#ede9fe 0,#e0f2fe 50%,#f9fafb 100%)}
+    body[data-ui-theme="high"]{--primary:#1d4ed8;--secondary:#d97706;--sidebar-bg:#eff6ff;background:radial-gradient(ellipse at 40% 0%,#bfdbfe 0,#f8fafc 45%,#e2e8f0 100%)}
+    body[data-ui-theme="high"] .sidebar{border-right-color:#93c5fd}
+    body[data-ui-theme="college"]{--primary:#2563eb;--secondary:#0d9488;background:radial-gradient(circle at top,#dbeafe 0,#f8fafc 55%,#f1f5f9 100%)}
+    body[data-ui-theme="pro"]{--primary:#0f172a;--secondary:#0ea5e9;--text-main:#0f172a;background:linear-gradient(160deg,#f8fafc 0,#e2e8f0 100%)}
+    body[data-ui-theme="pro"] .sidebar{background:#0f172a;color:#e2e8f0;border-right-color:#334155}
+    body[data-ui-theme="pro"] .sidebar-link{color:#e2e8f0}
+    body[data-ui-theme="pro"] .sidebar-link:hover{background:rgba(56,189,248,.15)}
+    body[data-ui-theme="pro"] .brand-subtitle{color:#94a3b8}
+    body[data-ui-theme="pro"] .sidebar-footer{color:#94a3b8}
+    .risk-strip{display:none;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;margin-bottom:10px;font-size:13px;font-weight:500}
+    .risk-strip.show{display:flex}
+    .risk-strip.warn{background:linear-gradient(90deg,rgba(234,179,8,.25),rgba(250,204,21,.15));border:1px solid #eab308;color:#854d0e}
+    .risk-strip.crisis{background:linear-gradient(90deg,rgba(239,68,68,.3),rgba(248,113,113,.15));border:1px solid #ef4444;color:#991b1b;animation:shake 1.2s ease-in-out infinite}
+    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+    .quick-tips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .quick-tips button{font-size:12px;border-radius:999px;padding:4px 10px;border:1px solid var(--border);background:var(--panel);cursor:pointer}
+    .quick-tips button:hover{border-color:var(--primary);color:var(--primary)}
+    body[data-identity-tier="primary"] .sidebar-link{font-size:15px;padding:10px 12px;border-radius:12px}
+    body[data-identity-tier="primary"] .top-title{font-size:1.28rem}
+    body[data-identity-tier="primary"] #chat-send{font-size:15px;padding:8px 18px}
+    body[data-identity-tier="primary"] .chat-log{font-size:15px}
+    body[data-identity-tier="middle"] .brand-logo{box-shadow:0 0 20px rgba(124,58,237,.45)}
+    body[data-identity-tier="high"] .card{border-color:#bfdbfe}
+    body[data-identity-tier="college"] .main{max-width:1280px}
+    body[data-identity-tier="grad"] .top-title{font-size:1.15rem;letter-spacing:.02em}
+    body[data-identity-tier="teacher"] .main{max-width:1320px}
+    body[data-identity-tier="teacher"] .sidebar-link{font-size:13px}
+    .identity-chrome-panel{display:none;margin-bottom:10px;padding:12px 14px;border-radius:14px;border:1px solid var(--border);background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(248,250,252,.9));font-size:13px;line-height:1.5}
+    body[data-identity-tier="primary"] .identity-chrome-panel.ic-show-primary{display:block}
+    body[data-identity-tier="middle"] .identity-chrome-panel.ic-show-middle{display:block}
+    body[data-identity-tier="high"] .identity-chrome-panel.ic-show-high{display:block}
+    body[data-identity-tier="college"] .identity-chrome-panel.ic-show-college{display:block}
+    body[data-identity-tier="grad"] .identity-chrome-panel.ic-show-grad{display:block}
+    body[data-identity-tier="teacher"] .identity-chrome-panel.ic-show-teacher{display:block}
+    /* —— 分龄整页布局（非仅换背景色） —— */
+    .tier-hero-row{grid-column:1/-1;display:none;margin-bottom:4px}
+    body[data-identity-tier="primary"] .tier-hero-row.tier-hero-row--primary{display:block}
+    body[data-identity-tier="middle"] .tier-hero-row.tier-hero-row--middle{display:block}
+    body[data-identity-tier="high"] .tier-hero-row.tier-hero-row--high{display:block}
+    .tier-hero{border-radius:16px;padding:12px 14px;font-size:13px;line-height:1.45;border:1px solid var(--border)}
+    .tier-hero--kid{background:linear-gradient(90deg,#fff7ed,#fce7f3,#fef9c3);border-color:#fcd34d;box-shadow:0 8px 24px rgba(251,191,36,.2)}
+    .tier-hero--kid .hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .tier-hero--kid .hero-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#fff;border:2px dashed #f472b6;font-weight:600;color:#be185d}
+    .tier-hero--hole{background:linear-gradient(135deg,#1e1b4b 0,#312e81 40%,#4c1d95 100%);color:#e9d5ff;border-color:#6d28d9;box-shadow:0 12px 32px rgba(76,29,149,.35)}
+    .tier-hero--hole .hole-sub{opacity:.88;font-size:12px;margin-top:4px}
+    .tier-hero--exam{background:linear-gradient(90deg,#eff6ff,#fff7ed);border-color:#93c5fd;color:#1e3a8a}
+    .tier-hero--exam .exam-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:8px}
+    .tier-hero--exam input[type="date"]{border-radius:10px;border:1px solid #93c5fd;padding:4px 8px;font-size:13px}
+    .tier-hero--exam #exam-countdown{font-weight:700;color:#c2410c}
+    body[data-identity-tier="primary"] .chat-layout{grid-template-columns:minmax(0,1fr);max-width:720px;margin:0 auto}
+    body[data-identity-tier="primary"] .chat-layout > .card:last-child{order:-1}
+    body[data-identity-tier="primary"] .chat-layout > .card{border-radius:22px;border-width:3px;border-style:solid;border-color:#fcd34d;box-shadow:0 16px 40px rgba(244,114,182,.15)}
+    body[data-identity-tier="primary"] .bubble{font-size:15px;border-radius:18px}
+    body[data-identity-tier="primary"] .chat-log{border-radius:18px;background:linear-gradient(180deg,#fffbeb,#fff)}
+    body[data-identity-tier="middle"] .chat-layout{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}
+    body[data-identity-tier="middle"] .chat-layout > .card:first-child{background:linear-gradient(180deg,#faf5ff 0,#fff 28%);border-color:#ddd6fe;box-shadow:0 14px 36px rgba(109,40,217,.12)}
+    body[data-identity-tier="middle"] .chat-log{background:#faf5ff;border:1px solid #e9d5ff;border-radius:14px}
+    body[data-identity-tier="middle"] .bubble.ai{background:#ede9fe;color:#1e1b4b;border:1px solid #c4b5fd}
+    body[data-identity-tier="high"] .chat-layout{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+    body[data-identity-tier="high"] .chat-layout > .card:first-child{border-radius:12px;border-left:4px solid #2563eb}
+    body[data-identity-tier="high"] .sidebar-link{border-radius:6px}
+    .survey-tier-banner{display:none;margin-bottom:12px;border-radius:16px;padding:14px 16px;border:1px solid var(--border)}
+    body[data-identity-tier="primary"] .survey-tier-banner.stb-primary{display:block;background:linear-gradient(135deg,#fef3c7,#fce7f3);border-color:#fbbf24}
+    body[data-identity-tier="middle"] .survey-tier-banner.stb-middle{display:block;background:#ede9fe;border-color:#a78bfa}
+    body[data-identity-tier="high"] .survey-tier-banner.stb-high{display:block;background:linear-gradient(90deg,#eff6ff,#f8fafc);border-color:#93c5fd}
+    .kid-energy-bar{height:14px;border-radius:999px;background:#e5e7eb;overflow:hidden;margin:10px 0 6px}
+    .kid-energy-fill{height:100%;width:20%;border-radius:999px;background:linear-gradient(90deg,#f472b6,#fbbf24);transition:width .25s ease}
+    .tree-hole-wall{max-height:220px;overflow-y:auto;padding:10px;border-radius:12px;background:#1e1b4b0d;border:1px dashed #7c3aed;margin-bottom:10px}
+    .tree-leaf{background:#fff;border-radius:12px;padding:8px 10px;margin-bottom:8px;font-size:13px;border:1px solid #e9d5ff;position:relative}
+    .tree-leaf .leaf-meta{font-size:11px;color:#6b7280;margin-top:4px}
+    .high-plan-list{list-style:none;padding:0;margin:0}
+    .high-plan-list li{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #e5e7eb;font-size:13px}
+    .high-plan-list input{accent-color:#1d4ed8}
+    .res-grid-2{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+    body[data-identity-tier="primary"] .survey-q label{display:inline-block;margin:4px 6px 4px 0;padding:8px 14px;border-radius:14px;border:2px solid #fde68a;background:#fffbeb;cursor:pointer}
+    body[data-identity-tier="primary"] .survey-q input{margin-right:6px}
+    body[data-identity-tier="middle"] .survey-q{border-color:#e9d5ff;border-left:3px solid #7c3aed;padding-left:10px}
+    body[data-identity-tier="primary"] .sidebar{border-radius:0 24px 24px 0;border-right-width:3px}
+    body[data-identity-tier="middle"] .sidebar{background:linear-gradient(180deg,#1e1b4b,#312e81);color:#e9d5ff;border-right-color:#6d28d9}
+    body[data-identity-tier="middle"] .sidebar .brand-title{color:#faf5ff}
+    body[data-identity-tier="middle"] .sidebar .brand-subtitle{color:#c4b5fd}
+    body[data-identity-tier="middle"] .sidebar-link{color:#ede9fe}
+    body[data-identity-tier="middle"] .sidebar-link:hover{background:rgba(167,139,250,.2)}
+    body[data-identity-tier="middle"] .sidebar-link.active{background:linear-gradient(90deg,#7c3aed,#22d3ee);color:#fff;box-shadow:0 0 16px rgba(124,58,237,.4)}
+    body[data-identity-tier="middle"] .sidebar-link i{opacity:.95}
+    body[data-identity-tier="middle"] .sidebar-footer{color:#c4b5fd}
+    body[data-identity-tier="middle"] .brand-logo{background:radial-gradient(circle at 30% 30%,#a78bfa,#4c1d95)}
+    body[data-identity-tier="high"] .sidebar{background:linear-gradient(180deg,#f8fafc,#eff6ff);border-right:2px solid #bfdbfe}
+    .star-mood-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+    .star-mood-row button{font-size:16px;padding:8px 14px;border-radius:14px;border:2px solid #fcd34d;background:#fffbeb;cursor:pointer;line-height:1.25;transition:transform .12s ease,box-shadow .12s ease,background .12s ease}
+    .star-mood-row button:hover{background:#fef3c7;transform:translateY(-1px)}
+    .star-mood-row button.is-selected{background:linear-gradient(180deg,#fde68a,#fcd34d);border-color:#f59e0b;box-shadow:0 3px 0 #d97706;transform:translateY(-1px)}
+    .mood-toolbar{margin:10px 0;padding:10px 12px;border-radius:14px;background:linear-gradient(135deg,#f8fafc,#fff);border:1px solid var(--border);box-shadow:0 2px 10px rgba(15,23,42,.06)}
+    body[data-identity-tier="primary"] .mood-toolbar{background:linear-gradient(135deg,#fffbeb,#fefce8);border-color:#fde68a}
+    .mood-toolbar-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:8px}
+    .mood-toolbar-title{font-weight:600;font-size:13px}
+    .mood-toolbar-hint{font-size:12px;color:var(--text-muted)}
+    .mood-toolbar-body{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+    .mood-chip-row{display:flex;flex-wrap:wrap;gap:6px;flex:1;min-width:0}
+    .mood-chip{border:none;border-radius:999px;padding:5px 12px;font-size:12px;cursor:pointer;background:#e2e8f0;color:#334155;transition:background .12s ease,box-shadow .12s ease}
+    .mood-chip:hover{background:#cbd5e1}
+    .mood-chip.active{background:#2563eb;color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.25)}
+    body[data-identity-tier="primary"] .mood-chip{background:#fff;border:1px solid #fcd34d;color:#44403c}
+    body[data-identity-tier="primary"] .mood-chip.active{background:linear-gradient(180deg,#fbbf24,#f59e0b);color:#1c1917;border-color:#d97706;box-shadow:0 2px 8px rgba(245,158,11,.35)}
+    .mood-toolbar .mood-select{max-width:168px;min-width:120px}
+    .check-mini{font-size:12px;color:var(--text-muted);padding-left:1rem;margin:0}
+    .layout{display:flex;min-height:100vh}
+    .sidebar{width:240px;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:16px 12px;display:flex;flex-direction:column}
+    .brand{display:flex;align-items:center;gap:10px;padding:8px 8px 16px}
+    .brand-logo{width:36px;height:36px;border-radius:999px;background:radial-gradient(circle at 30% 30%,#60a5fa,#4f46e5);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:18px;box-shadow:0 0 14px rgba(59,130,246,.45)}
+    .brand-title{font-weight:600;font-size:16px}
+    .brand-subtitle{font-size:12px;color:var(--text-muted)}
+    .sidebar-nav{margin-top:8px;display:flex;flex-direction:column;gap:4px}
+    .sidebar-link{border-radius:8px;border:none;padding:8px 10px;background:transparent;color:var(--text-main);text-align:left;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:8px}
+    .sidebar-link:hover{background:#eff6ff}
+    .sidebar-link.active{background:linear-gradient(90deg,rgba(59,130,246,.95),rgba(45,212,191,.9));color:#fff;box-shadow:0 0 12px rgba(59,130,246,.35)}
+    .sidebar-link.hidden{display:none}
+    .sidebar-footer{margin-top:auto;font-size:12px;color:var(--text-muted);padding:6px 8px}
+    .main{flex:1;display:flex;flex-direction:column;padding:20px 28px;gap:16px;max-width:1240px;margin:0 auto}
+    .top-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .top-title{font-size:20px;font-weight:600}
+    .top-subtitle{font-size:13px;color:var(--text-muted)}
+    .user-info-bar{display:flex;align-items:center;gap:10px}
+    .user-info-bar .badge{font-size:12px}
+    .content{display:flex;gap:14px;flex:1;min-height:0}
+    .card{background:var(--panel);border-radius:14px;border:1px solid var(--border);padding:12px 14px;box-shadow:0 12px 30px rgba(15,23,42,.06)}
+    .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:13px;color:var(--text-muted)}
+    .card-title{font-size:14px;font-weight:500;color:var(--text-main)}
+    .section-page{display:none;flex:1;min-height:0;flex-direction:column;gap:12px}
+    .section-page.active{display:flex}
+    .chat-layout{display:grid;grid-template-columns:minmax(0,2.1fr) minmax(0,1.2fr);gap:12px;align-items:flex-start}
+    .chat-log{background:#f9fafb;border-radius:10px;padding:10px 12px;overflow-y:auto;max-height:52vh;min-height:160px;scroll-behavior:smooth}
+    .chat-msg{display:flex;margin-bottom:8px}
+    .chat-msg.user{justify-content:flex-end}
+    .chat-msg.ai{justify-content:flex-start}
+    .bubble{max-width:80%;padding:8px 10px;border-radius:12px;font-size:14px;white-space:pre-wrap}
+    .bubble.user{background:var(--grad-chat);color:#fff;border-bottom-right-radius:2px}
+    .bubble.ai{background:#e5e7eb;color:#111827;border-bottom-left-radius:2px}
+    .bubble img.chat-thumb{max-width:200px;max-height:150px;border-radius:8px;display:block;margin-top:4px}
+    .chat-input-area{margin-top:8px}
+    .image-preview{display:none;align-items:center;gap:8px;padding:6px 10px;background:#f1f5f9;border-radius:10px 10px 0 0;border:1px solid var(--border);border-bottom:none}
+    .image-preview.show{display:flex}
+    .image-preview img{max-height:60px;border-radius:6px}
+    .image-preview .remove-img{cursor:pointer;color:#ef4444;font-size:18px}
+    .chat-input-row{display:flex;gap:6px;align-items:center}
+    .chat-input-row textarea{flex:1;padding:8px 10px;border-radius:10px;border:1px solid rgba(148,163,184,.6);background:rgba(15,23,42,.92);color:#e5e7eb;font-size:14px;resize:none;min-height:38px;max-height:100px;line-height:1.4}
+    .chat-input-row button{border-radius:999px}
+    .chat-input-row .btn-icon{background:transparent;border:1px solid rgba(148,163,184,.4);color:#94a3b8;width:36px;height:36px;display:flex;align-items:center;justify-content:center;padding:0;font-size:16px;cursor:pointer;border-radius:999px;flex-shrink:0}
+    .chat-input-row .btn-icon:hover{background:rgba(59,130,246,.15);color:#60a5fa;border-color:#60a5fa}
+    .avatar-wrapper{display:flex;align-items:center;gap:10px}
+    .avatar{width:52px;height:52px;border-radius:16px;background:radial-gradient(circle at 30% 20%,#fbbf24,#f97316);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;box-shadow:0 0 16px rgba(249,115,22,.9);animation:float 3s ease-in-out infinite}
+    .avatar-face{width:34px;height:34px;border-radius:999px;background:#fed7aa;position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column}
+    .avatar-eyes{display:flex;justify-content:space-between;width:60%;margin-bottom:2px}
+    .avatar-eye{width:5px;height:5px;border-radius:999px;background:#111827}
+    .avatar-mouth{width:14px;height:8px;border-radius:0 0 14px 14px;border:2px solid #ea580c;border-top:none}
+    .avatar-badge{position:absolute;bottom:-2px;right:-2px;background:#22c55e;border-radius:999px;padding:2px 6px;font-size:10px;color:#022c22;font-weight:600}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+    .tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;background:rgba(15,23,42,.8);font-size:11px}
+    .tag-dot{width:7px;height:7px;border-radius:999px;margin-right:4px;background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,.9)}
+    .metric-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+    .metric{background:linear-gradient(135deg,rgba(59,130,246,.08),rgba(248,250,252,1));border-radius:10px;padding:8px 10px;font-size:12px}
+    .metric-title{color:var(--text-muted);margin-bottom:2px}
+    .metric-value{font-size:18px;font-weight:600}
+    .metric-desc{font-size:11px;color:var(--text-muted)}
+    .small-text{font-size:12px;color:var(--text-muted)}
+    .btn{border-radius:12px;font-weight:600;padding:0.5rem 1.1rem;transition:background .2s, color .2s, box-shadow .2s, transform .12s, border-color .2s}
+    .btn:active{transform:scale(.985)}
+    .btn-sm{padding:0.42rem 0.95rem;font-size:13px;border-radius:10px}
+    .btn-primary{background:linear-gradient(135deg,#4f46e5,#06b6d4);border:none;color:#fff!important;box-shadow:0 4px 14px rgba(79,70,229,.35)}
+    .btn-primary:hover{background:linear-gradient(135deg,#4338ca,#0891b2);color:#fff!important;box-shadow:0 6px 18px rgba(79,70,229,.4)}
+    .btn-primary:disabled{opacity:.65}
+    .btn-outline-primary,.btn-outline-secondary{border-width:2px;border-radius:12px}
+    .btn-outline-primary:hover,.btn-outline-secondary:hover{transform:translateY(-1px)}
+    .btn-warning{font-weight:600;border-radius:12px;box-shadow:0 2px 10px rgba(234,179,8,.35)}
+    .form-control,.form-select{border-radius:12px;border:1px solid #cbd5e1;padding:10px 14px;min-height:42px;transition:border-color .2s, box-shadow .2s;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+    .form-control:focus,.form-select:focus{border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,.18);outline:none}
+    .form-control::placeholder{color:#94a3b8}
+    .form-control-sm,.form-select-sm{min-height:38px;padding:8px 12px;border-radius:10px;font-size:14px}
+    textarea.form-control{min-height:88px;line-height:1.45;resize:vertical}
+    .input-group .form-control{border-radius:10px 0 0 10px}
+    .input-group .btn{border-radius:0 10px 10px 0;padding-left:1rem;padding-right:1rem}
+    .auth-card{max-width:480px;margin:0 auto;padding:28px 26px 24px;border-radius:20px;border:1px solid rgba(148,163,184,.35);box-shadow:0 20px 50px rgba(15,23,42,.1),0 0 0 1px rgba(255,255,255,.6) inset;background:linear-gradient(165deg,#ffffff 0%,#f8fafc 100%)}
+    .auth-tabbar{display:flex;gap:0;padding:4px;margin:0 0 22px 0;background:#e2e8f0;border-radius:14px;list-style:none}
+    .auth-tab{flex:1;border:none;background:transparent;color:#64748b;font-size:15px;font-weight:600;padding:12px 16px;border-radius:12px;cursor:pointer;transition:background .2s,color .2s,box-shadow .2s}
+    .auth-tab:hover{color:#334155;background:rgba(255,255,255,.5)}
+    .auth-tab.active{background:#fff;color:#1d4ed8;box-shadow:0 4px 14px rgba(15,23,42,.08)}
+    body[data-ui-theme="kid"] .auth-tab.active{color:#db2777}
+    body[data-ui-theme="teen"] .auth-tab.active{color:#6d28d9}
+    body[data-ui-theme="high"] .auth-tab.active{color:#1d4ed8}
+    #auth-section .form-label{font-weight:600;color:#334155;margin-bottom:6px}
+    #auth-section #login-btn,#auth-section #register-btn{margin-top:8px;padding:12px;border-radius:14px;font-size:15px}
+    #auth-section.section-page.active{justify-content:center;padding-top:8px}
+    .form-range{height:8px}
+    .form-range::-webkit-slider-thumb{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);box-shadow:0 2px 8px rgba(99,102,241,.4);cursor:pointer}
+    .tier-hero .btn{border-radius:10px;font-weight:600}
+    #resources-section .btn-sm,#survey-section .btn-sm{padding:0.45rem 1rem;border-radius:10px}
+    #tree-hole-input{min-height:96px;border-radius:14px;border:1px solid #c4b5fd;background:#faf5ff}
+    #tree-hole-input:focus{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.15)}
+    .high-plan-list input[type="checkbox"]{width:18px;height:18px;border-radius:4px;cursor:pointer}
+    .survey-questions-container{max-height:50vh;overflow-y:auto}
+    .survey-q{padding:10px 0;border-bottom:1px solid var(--border)}
+    .survey-q:last-child{border-bottom:none}
+    @media(max-width:960px){
+      .layout{flex-direction:column}
+      .sidebar{flex-direction:row;width:100%;overflow-x:auto}
+      .main{padding:12px 10px}
+      .content{flex-direction:column}
+      .chat-layout{grid-template-columns:minmax(0,1fr)}
+    }
+    .identity-modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:1050;display:flex;align-items:center;justify-content:center;padding:16px}
+    .identity-modal{max-width:440px;width:100%;padding:18px 20px;box-shadow:0 24px 48px rgba(15,23,42,.2)}
+    .identity-modal-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .identity-modal-grid .identity-pick{font-size:13px;padding:10px 8px;line-height:1.35}
+  </style>
+</head>
+<body data-ui-theme="college" data-identity-tier="college">
+  <!-- 首次进入：选择学段（分龄界面）；登录后以账号身份为准 -->
+  <div id="identity-modal-overlay" class="identity-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="identity-modal-title" style="display:none">
+    <div class="identity-modal card">
+      <h5 id="identity-modal-title" class="mb-2">先选一下你的学段</h5>
+      <p class="small-text text-muted mb-3">系统会按小初高呈现<strong>游戏化测评 / 树洞风格 / 升学压力</strong>等不同界面风格；核心功能相同。</p>
+      <div class="identity-modal-grid">
+        <button type="button" class="btn btn-outline-primary identity-pick" data-identity="小学"><span class="fs-4">🌟</span><br/>小学生</button>
+        <button type="button" class="btn btn-outline-primary identity-pick" data-identity="初中"><span class="fs-4">🌿</span><br/>初中生</button>
+        <button type="button" class="btn btn-outline-primary identity-pick" data-identity="高中"><span class="fs-4">📘</span><br/>高中生</button>
+        <button type="button" class="btn btn-outline-secondary identity-pick" data-identity="大学">大学生</button>
+        <button type="button" class="btn btn-outline-secondary identity-pick" data-identity="研究生">研究生</button>
+        <button type="button" class="btn btn-outline-secondary identity-pick" data-identity="教师">教师</button>
+      </div>
+      <p class="small-text text-muted mt-3 mb-0">登录后将以注册时填写的「身份标签」为准；此处仅影响未登录时的界面与对话分龄参数。</p>
+      <button type="button" class="btn btn-link btn-sm px-0 mt-2" id="identity-modal-skip">稍后再选</button>
+    </div>
+  </div>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">CM</div>
+        <div>
+          <div class="brand-title">校园智心守护</div>
+          <div class="brand-subtitle" id="brand-role-text">学生端</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav" id="sidebar-nav">
+        <button type="button" class="sidebar-link active" data-target="chat-section" id="nav-btn-chat">
+          <i class="bi bi-chat-dots"></i> <span id="nav-label-chat">心情倾诉</span>
+        </button>
+        <button class="sidebar-link" data-target="survey-section">
+          <i class="bi bi-clipboard-check"></i> <span id="nav-label-survey">心理测评</span>
+        </button>
+        <button class="sidebar-link" data-target="resources-section">
+          <i class="bi bi-heart-pulse"></i> <span id="nav-label-resources">心理资源</span>
+        </button>
+        <button class="sidebar-link hidden" data-target="admin-section" id="nav-admin">
+          <i class="bi bi-speedometer2"></i> 管理员面板
+        </button>
+        <button class="sidebar-link" data-target="auth-section" id="nav-auth">
+          <i class="bi bi-person-circle"></i> 登录 / 注册
+        </button>
+        <button class="sidebar-link" data-target="about-section">
+          <i class="bi bi-info-circle"></i> 关于本系统
+        </button>
+        <button type="button" class="sidebar-link hidden" id="nav-identity-guest" title="未登录时可切换分龄界面">
+          <i class="bi bi-person-hearts"></i> 切换学段界面
+        </button>
+        <button class="sidebar-link hidden" id="nav-logout">
+          <i class="bi bi-box-arrow-right"></i> 退出登录
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div>当前用户：<span id="sidebar-user-display">未登录</span></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="top-bar">
+        <div>
+          <div class="top-title" id="top-main-title">百川——联邦协同模式下的校园智心守护系统</div>
+          <div class="top-subtitle" id="top-identity-gloss" style="min-height:1.2em"></div>
+          <div class="top-subtitle" id="top-tech-line">情感识别 · 风险评估 · 大模型干预 · 多模态理解</div>
+        </div>
+        <div class="user-info-bar" id="user-info-bar">
+          <span class="badge bg-secondary" id="top-user-badge">未登录</span>
+        </div>
+      </div>
+
+      <div class="content">
+        <!-- ====== 心情倾诉（统一聊天 + 多模态） ====== -->
+        <section id="chat-section" class="section-page active">
+          <div class="chat-layout">
+            <div class="tier-hero-row tier-hero-row--primary">
+              <div class="tier-hero tier-hero--kid">
+                <strong>心情探险队出发！</strong> 这一页是「大按钮 + 短句子」模式，和小智说话就像闯关收集心情贴纸～
+                <div class="hero-badges">
+                  <span class="hero-badge">⭐ 贴纸打卡</span>
+                  <span class="hero-badge">🎨 可发图画心情</span>
+                  <span class="hero-badge">🛡️ 难过时找大人</span>
+                </div>
+              </div>
+            </div>
+            <div class="tier-hero-row tier-hero-row--middle">
+              <div class="tier-hero tier-hero--hole">
+                <strong>匿名树洞氛围</strong> · 倾诉文字默认只有你和小智看见；若登录，按学校规则可能存档。
+                <div class="hole-sub">侧栏为夜色主题，减少「被围观」感。树洞墙在「求助资源」页，草稿仅保存在当前浏览器。</div>
+              </div>
+            </div>
+            <div class="tier-hero-row tier-hero-row--high">
+              <div class="tier-hero tier-hero--exam">
+                <strong>升学压力站</strong>：设一个目标日（如模考/高考），本页帮你倒数；再拆成小任务，避免一口气想完。
+                <div class="exam-row">
+                  <label class="small-text mb-0">目标日</label>
+                  <input type="date" id="exam-target-date" />
+                  <span id="exam-countdown" class="small-text">尚未设置</span>
+                  <button type="button" class="btn btn-sm btn-outline-primary" id="btn-exam-save">保存</button>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title d-flex align-items-center">
+                  <i class="bi bi-headset me-1"></i>
+                  <span id="chat-card-title">AI 心理助手 · 心情倾诉</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <button class="btn btn-sm btn-outline-secondary" id="clear-chat">
+                    <i class="bi bi-trash3"></i> 清空
+                  </button>
+                </div>
+              </div>
+              <div id="risk-strip" class="risk-strip" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span id="risk-strip-text"></span>
+              </div>
+              <div class="identity-chrome-panel ic-show-primary" id="ic-wrap-primary">
+                <strong><i class="bi bi-stars text-warning me-1"></i>小朋友专属</strong>：先点「选星星」说出心情，也会自动填好下面的心情状态；想换一换可以点心情小标签或下拉框。
+                <div class="star-mood-row" id="star-mood-row" aria-label="星星心情"></div>
+              </div>
+              <div class="identity-chrome-panel ic-show-middle" id="ic-wrap-middle">
+                <strong><i class="bi bi-shield-lock text-primary me-1"></i>树洞空间</strong>：这里像校园里的匿名心情角，你可以放心用文字或图片和小智说说烦恼；对话若登录会按学校规则存储，不愿留痕可匿名使用。
+              </div>
+              <div class="identity-chrome-panel ic-show-high" id="ic-wrap-high">
+                <strong><i class="bi bi-journal-bookmark text-primary me-1"></i>升学与压力</strong>：学业节奏紧时，试试「心理测评」做自我监测，或用下方短语开启对话。系统会结合<strong>监测—预警—干预</strong>流程给你支持（结果不能替代专业诊断）。
+                <ul class="check-mini mt-1"><li>每天留 10 分钟给放松或运动</li><li>把担心写下来再和小智梳理</li><li>需要时联系本校心理老师或热线</li></ul>
+              </div>
+              <div class="identity-chrome-panel ic-show-college" id="ic-wrap-college">
+                <strong><i class="bi bi-compass me-1"></i>实用模式</strong>：侧重自助工具与清晰反馈——测评、资源与对话记录便于你自我管理情绪与求助路径。
+              </div>
+              <div class="identity-chrome-panel ic-show-grad" id="ic-wrap-grad">
+                <strong><i class="bi bi-cpu me-1"></i>研究生模式</strong>：科研与职业压力下，建议把对话当作短时梳理；复杂情况请结合导师、学校咨询中心与专业医疗。
+              </div>
+              <div class="identity-chrome-panel ic-show-teacher" id="ic-wrap-teacher">
+                <strong><i class="bi bi-person-badge me-1"></i>教师支持</strong>：关注职业倦怠与边界；可用测评与对话做自我关照，必要时通过「心理资源」转介专业支持。
+              </div>
+              <div class="mood-toolbar" id="mood-toolbar" aria-label="心情状态">
+                <div class="mood-toolbar-head">
+                  <span class="mood-toolbar-title"><i class="bi bi-heart-pulse me-1"></i>心情状态</span>
+                  <span class="mood-toolbar-hint">点标签或（小学）选星星可快速填写，也可留空</span>
+                </div>
+                <div class="mood-toolbar-body">
+                  <div class="mood-chip-row" id="mood-chip-row"></div>
+                  <select id="chat-mood-state" class="form-select form-select-sm mood-select" title="心情状态">
+                    <option value="">不选</option>
+                    <option value="开心">开心</option>
+                    <option value="平静">平静</option>
+                    <option value="焦虑">焦虑</option>
+                    <option value="难过">难过</option>
+                    <option value="愤怒">愤怒</option>
+                    <option value="疲惫">疲惫</option>
+                  </select>
+                </div>
+              </div>
+              <div class="chat-log" id="chat-log">
+                <div class="chat-msg ai">
+                  <div class="bubble ai" id="chat-welcome-bubble">嗨，这里是校园智心守护系统的小智。
+可以跟我聊聊最近的心情，也可以点击下方的图片按钮上传图片或截图，我来帮你分析。</div>
+                </div>
+              </div>
+              <div class="chat-input-area">
+                <div class="image-preview" id="image-preview">
+                  <img id="preview-thumb" src="" alt="预览" />
+                  <span class="small-text" id="preview-name"></span>
+                  <i class="bi bi-x-circle-fill remove-img" id="remove-image"></i>
+                </div>
+                <div class="chat-input-row">
+                  <input type="file" id="image-file-input" accept="image/*" style="display:none" />
+                  <button class="btn-icon" id="btn-attach-image" title="上传图片或截图">
+                    <i class="bi bi-image"></i>
+                  </button>
+                  <textarea id="chat-input" rows="1" placeholder="写下此刻的想法或心情...（也可粘贴截图）"></textarea>
+                  <button id="chat-send" class="btn btn-primary btn-sm">
+                    发送 <i class="bi bi-send ms-1"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="small-text mt-1">
+                支持文字、图片或粘贴截图与小智交流。
+              </div>
+              <div class="quick-tips" id="quick-tips" aria-label="快捷心情短语"></div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="avatar-wrapper">
+                  <div class="avatar">
+                    <div class="avatar-face">
+                      <div class="avatar-eyes"><div class="avatar-eye"></div><div class="avatar-eye"></div></div>
+                      <div class="avatar-mouth"></div>
+                    </div>
+                    <div class="avatar-badge">AI</div>
+                  </div>
+                  <div>
+                    <div class="card-title" id="mood-side-title">小智 · 心情守护灯</div>
+                    <div class="small-text" id="mood-side-desc">根据你最近的对话，小智会用心情指示灯帮你感受情绪状态。</div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div class="tag mb-2">
+                  <span class="tag-dot" id="mood-dot"></span>
+                  <span id="mood-text">当前心情：等待你的第一句话</span>
+                </div>
+                <div class="metric-grid mt-1">
+                  <div class="metric">
+                    <div class="metric-title">最近 7 次对话</div>
+                    <div class="metric-value" id="metric-count">0</div>
+                    <div class="metric-desc">近期对话概览</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-title">积极情绪比</div>
+                    <div class="metric-value" id="metric-positive">0%</div>
+                    <div class="metric-desc">最近对话估算</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-title">预警次数</div>
+                    <div class="metric-value" id="metric-warning">0</div>
+                    <div class="metric-desc">风险 ≥ warning</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====== 心理测评问卷（动态） ====== -->
+        <section id="survey-section" class="section-page">
+          <div class="survey-tier-banner stb-primary">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+              <div><strong>心情闯关测评</strong> <span class="small-text text-muted">（界面游戏化，题目与心理测评内容一致）</span></div>
+              <button type="button" class="btn btn-sm btn-warning" id="btn-kid-energy">能量 +1 ✨</button>
+            </div>
+            <div class="small-text mb-1">能量条满格时给自己一个小奖励吧（吃零食、伸懒腰都可以）。</div>
+            <div class="kid-energy-bar" aria-hidden="true"><div class="kid-energy-fill" id="kid-energy-fill"></div></div>
+          </div>
+          <div class="survey-tier-banner stb-middle">
+            <strong>树洞自评</strong>
+            <p class="small-text mb-0">问卷像「写给未来的信」：慢慢选，没有对错。若感到强烈不适，请暂停并联系心理老师或热线。</p>
+          </div>
+          <div class="survey-tier-banner stb-high">
+            <strong>学业压力监测</strong>
+            <p class="small-text mb-0">建议固定周期（如每两周）做一次，观察趋势而非单次分数；可与「升学压力站」里的周计划搭配使用。</p>
+            <div class="d-flex flex-wrap gap-3 align-items-center mt-2 small-text">
+              <label class="mb-0">昨晚睡眠自评（1–5）</label>
+              <input type="range" min="1" max="5" value="3" id="high-sleep-slider" class="form-range" style="max-width:180px" />
+              <span id="high-sleep-val">3</span>
+              <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-high-sleep-save">保存备忘</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="bi bi-clipboard-check me-1"></i> <span id="survey-page-title">心理测评问卷</span></div>
+            </div>
+            <div class="small-text mb-2" id="survey-intro-text">
+              选择一份问卷进行自评。结果仅供参考，不能替代专业诊断。
+            </div>
+            <div class="mb-3">
+              <label class="form-label small-text">选择问卷：</label>
+              <select id="survey-select" class="form-select form-select-sm" style="max-width:400px">
+                <option value="">-- 正在加载问卷 --</option>
+              </select>
+            </div>
+            <div id="survey-body" class="survey-questions-container"></div>
+            <div class="d-flex align-items-center mt-3">
+              <button id="survey-submit" class="btn btn-primary btn-sm me-3" disabled>
+                提交并查看结果
+              </button>
+              <div id="survey-result" class="small-text text-muted"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====== 登录 / 注册 ====== -->
+        <section id="auth-section" class="section-page">
+          <div class="card auth-card">
+            <div class="auth-tabbar" id="authTabs" role="tablist" aria-label="登录或注册">
+              <button type="button" class="auth-tab active" role="tab" aria-selected="true" data-tab="login-tab">登录</button>
+              <button type="button" class="auth-tab" role="tab" aria-selected="false" data-tab="register-tab">注册</button>
+            </div>
+
+            <div id="login-tab">
+              <div class="mb-2">
+                <label class="form-label small-text">用户名</label>
+                <input id="login-username" type="text" class="form-control form-control-sm" />
+              </div>
+              <div class="mb-2">
+                <label class="form-label small-text">密码</label>
+                <input id="login-password" type="password" class="form-control form-control-sm" />
+              </div>
+              <button id="login-btn" class="btn btn-primary btn-sm w-100 mt-2">登录</button>
+              <div id="login-hint" class="small-text mt-2"></div>
+            </div>
+
+            <div id="register-tab" style="display:none">
+              <div class="mb-2">
+                <label class="form-label small-text">用户名</label>
+                <input id="reg-username" type="text" class="form-control form-control-sm" />
+              </div>
+              <div class="mb-2">
+                <label class="form-label small-text">密码</label>
+                <input id="reg-password" type="password" class="form-control form-control-sm" />
+              </div>
+              <div class="mb-2">
+                <label class="form-label small-text">确认密码</label>
+                <input id="reg-password2" type="password" class="form-control form-control-sm" />
+              </div>
+              <div class="row g-2 mb-2">
+                <div class="col-6">
+                  <label class="form-label small-text">身份角色</label>
+                  <select id="reg-role" class="form-select form-select-sm">
+                    <option value="student">学生</option>
+                    <option value="school_admin">校级管理员</option>
+                    <option value="super_admin">超级管理员</option>
+                  </select>
+                </div>
+                <div class="col-6">
+                  <label class="form-label small-text">身份标签</label>
+                  <select id="reg-identity" class="form-select form-select-sm">
+                    <option value="小学">小学生</option>
+                    <option value="初中">初中生</option>
+                    <option value="高中">高中生</option>
+                    <option value="大学" selected>大学生</option>
+                    <option value="研究生">研究生</option>
+                    <option value="教师">教师</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-2" id="reg-school-admin-wrap" style="display:none">
+                <label class="form-label small-text" for="reg-admin-secret">校级管理员注册密钥</label>
+                <input id="reg-admin-secret" type="password" class="form-control form-control-sm" autocomplete="off" placeholder="请输入学校提供的校级管理员注册密钥" />
+                <div class="small-text text-muted mt-1">注册校级管理员需填写学校编号，并使用学校信息中心下发的密钥。</div>
+              </div>
+              <div class="mb-2" id="reg-super-secret-wrap" style="display:none">
+                <label class="form-label small-text" for="reg-super-secret">超级管理员注册密钥</label>
+                <input id="reg-super-secret" type="password" class="form-control form-control-sm" autocomplete="off" placeholder="请输入平台超级管理员注册密钥" />
+                <div class="small-text text-muted mt-1">用于创建可管理各校校级管理员的最高权限账号，密钥由平台方统一保管。</div>
+              </div>
+              <div class="row g-2 mb-2">
+                <div class="col-6">
+                  <label class="form-label small-text">姓名 / 昵称</label>
+                  <input id="reg-displayname" type="text" class="form-control form-control-sm" />
+                </div>
+                <div class="col-6">
+                  <label class="form-label small-text">学校编号（可选）</label>
+                  <input id="reg-school" type="text" class="form-control form-control-sm" />
+                </div>
+              </div>
+              <button id="register-btn" class="btn btn-primary btn-sm w-100 mt-2">注册</button>
+              <div id="register-hint" class="small-text mt-2"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====== 管理员跳转 ====== -->
+        <section id="admin-section" class="section-page">
+          <div class="card text-center" style="max-width:500px;margin:40px auto">
+            <h5 class="mb-3"><i class="bi bi-speedometer2 me-2"></i>管理员仪表盘</h5>
+            <p class="small-text">进入管理后台可查看数据统计、维护问卷与查阅授权范围内的记录。</p>
+            <button id="go-admin" class="btn btn-primary">进入管理员仪表盘 <i class="bi bi-box-arrow-up-right ms-1"></i></button>
+          </div>
+        </section>
+
+        <!-- ====== 心理资源 ====== -->
+        <section id="resources-section" class="section-page">
+          <div class="card mb-3 d-none" id="res-extra-primary">
+            <div class="card-header"><div class="card-title"><i class="bi bi-stars me-1 text-warning"></i> 游戏化心情小任务</div></div>
+            <p class="small-text mb-2">像小游戏一样关心自己：选一句话发给小智，或画一张图拍给它看，都算完成一次「心情打卡」。</p>
+            <div class="d-flex flex-wrap gap-2 mb-2 small-text">
+              <span class="badge rounded-pill text-bg-warning" id="badge-streak">连续打卡：0 天</span>
+              <span class="badge rounded-pill text-bg-info" id="badge-stickers">贴纸：0 枚</span>
+            </div>
+            <button type="button" class="btn btn-sm btn-primary me-2" id="btn-sticker-plus">今日打卡 +1</button>
+            <button type="button" class="btn btn-sm btn-outline-primary" id="btn-res-goto-chat">去和小智说话</button>
+          </div>
+          <div class="card mb-3 d-none" id="res-extra-middle">
+            <div class="card-header"><div class="card-title"><i class="bi bi-tree me-1"></i> 匿名树洞墙（隐私草稿）</div></div>
+            <p class="small-text mb-2">以下为<strong>当前浏览器内</strong>的隐私草稿，换设备不保留；请勿填写真实姓名、学号或详细地址。便于练习表达与情绪命名。</p>
+            <div class="tree-hole-wall" id="tree-hole-list" aria-live="polite"></div>
+            <label class="form-label small-text">投递一片「叶子」</label>
+            <textarea id="tree-hole-input" class="form-control form-control-sm mb-2" rows="2" maxlength="200" placeholder="写几句心情，例如：今天有点累，但不想跟爸妈说…"></textarea>
+            <div class="d-flex gap-2 flex-wrap">
+              <button type="button" class="btn btn-sm btn-primary" id="btn-tree-hole-post">挂上树洞</button>
+              <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-tree-hole-clear">清空草稿</button>
+            </div>
+            <p class="small-text text-muted mt-2 mb-0">正式校园互助社区须由学校审核后另行接入；此处为隐私草稿体验。</p>
+          </div>
+          <div class="card mb-3 d-none" id="res-extra-high">
+            <div class="card-header"><div class="card-title"><i class="bi bi-graph-up-arrow me-1"></i> 升学压力自我管理</div></div>
+            <ul class="small-text mb-2">
+              <li>用「心理测评」定期自查焦虑与抑郁倾向（筛查用）。</li>
+              <li>把大目标拆成周计划，减少「一次想完」带来的窒息感。</li>
+              <li>睡眠与运动是情绪的底层硬件，再忙也留底线。</li>
+            </ul>
+            <div class="small-text fw-semibold mb-1">本周小目标（勾选保存在当前浏览器）</div>
+            <ul class="high-plan-list" id="high-plan-list"></ul>
+            <div class="input-group input-group-sm mt-2" style="max-width:420px">
+              <input type="text" id="high-plan-new" class="form-control" placeholder="例如：每天背 20 个单词" maxlength="80" />
+              <button class="btn btn-outline-primary" type="button" id="btn-high-plan-add">添加</button>
+            </div>
+          </div>
+          <div class="card mb-3">
+            <div class="card-header">
+              <div class="card-title"><i class="bi bi-telephone me-1"></i> 心理援助与自助资源</div>
+            </div>
+            <p class="small-text mb-2">遇到困扰时，你并不孤单。以下渠道可在紧急或需要倾诉时使用（请以当地最新公布为准）。</p>
+            <div class="row g-2">
+              <div class="col-md-6">
+                <div class="metric h-100">
+                  <div class="metric-title">全国心理援助热线</div>
+                  <div class="metric-value" style="font-size:16px">400-161-9995</div>
+                  <div class="metric-desc">24 小时心理支持（请以当地最新公布为准）</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="metric h-100">
+                  <div class="metric-title">生命危机干预</div>
+                  <div class="metric-value" style="font-size:16px">各地 110 / 120</div>
+                  <div class="metric-desc">紧急人身安全或医学紧急情况请立即拨打</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="bi bi-journal-text me-1"></i> 日常自助小技巧</div>
+            </div>
+            <ul class="small-text mb-0">
+              <li>规律作息与适度运动有助于稳定情绪。</li>
+              <li>把感受写下来或画出来，有时能减轻压力。</li>
+              <li>与信任的老师、同学或家人聊聊，寻求支持。</li>
+              <li>完成本站的「心理测评」可做自我了解，结果仅供参考。</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ====== 关于 ====== -->
+        <section id="about-section" class="section-page">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="bi bi-info-circle me-1"></i> 关于本系统</div>
+            </div>
+            <div class="small-text">
+              <p><strong>校园智心守护</strong>面向学生提供情绪倾诉、心理自评与求助资源引导，并支持分龄界面与多模态输入（文字、图片等）。</p>
+              <p>系统结合情感线索、风险提示与疏导话术，帮助学生<strong>自我觉察与求助</strong>；输出仅供筛查与辅导参考，<strong>不能替代专业诊断或危机处置</strong>。</p>
+              <p>支持登录后使用更多功能；学校授权的管理员可在独立管理后台查看统计趋势（遵循最小必要与权限隔离原则）。</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+<script>
+(function(){
+  /* ===== 全局状态 ===== */
+  const SECTIONS = ["chat-section","survey-section","resources-section","auth-section","admin-section","about-section"];
+  /** 聊天本地摘要（侧栏指标用）按登录用户 id 或访客学段分键，避免切换账号串数据 */
+  var __cm_chat_hist_scope = null;
+  /** 已登录时与 GET /api/v1/chat/history 的 limit 一致：展示最近若干条库记录 */
+  var CHAT_UI_HISTORY_LIMIT = 10;
+  let authToken = localStorage.getItem("cm_token") || "";
+  let currentUser = null;
+  let pendingImage = null; // {file, dataUrl}
+  var lastIdentityTag = "大学";
+  var GUEST_IDENTITY_KEY = "cm_identity_pref";
+  var GUEST_CHOSEN_KEY = "cm_identity_chosen_v1";
+
+  function parseQueryParams(){
+    var q = {};
+    var s = (window.location.search || "").replace(/^\?/, "");
+    if(!s) return q;
+    s.split("&").forEach(function(pair){
+      var i = pair.indexOf("=");
+      var k = decodeURIComponent(i < 0 ? pair : pair.slice(0, i));
+      var v = decodeURIComponent(i < 0 ? "" : pair.slice(i + 1));
+      q[k] = v;
+    });
+    return q;
+  }
+  var VALID_IDENTITY_TAGS = ["小学","初中","高中","大学","研究生","教师"];
+  var TIER_PARAM_TO_TAG = {primary:"小学",middle:"初中",high:"高中",college:"大学",grad:"研究生",teacher:"教师"};
+  function normalizeIdentityTag(raw){
+    if(!raw) return "";
+    var t = String(raw).trim();
+    if(VALID_IDENTITY_TAGS.indexOf(t) >= 0) return t;
+    var low = String(raw).trim().toLowerCase();
+    if(TIER_PARAM_TO_TAG[low]) return TIER_PARAM_TO_TAG[low];
+    return "";
+  }
+  /** 从 URL ?identity=高中 或 ?tier=high 写入本地偏好（便于外链「分龄入口」） */
+  function hydrateIdentityFromUrl(){
+    var q = parseQueryParams();
+    var tag = normalizeIdentityTag(q.identity || q.identity_tag || "");
+    if(!tag) tag = normalizeIdentityTag(q.tier || "");
+    if(tag){
+      try{
+        localStorage.setItem(GUEST_IDENTITY_KEY, tag);
+        localStorage.setItem(GUEST_CHOSEN_KEY, "1");
+      }catch(e){}
+      return tag;
+    }
+    return "";
+  }
+  function getGuestIdentityTag(){
+    var q = parseQueryParams();
+    var tag = normalizeIdentityTag(q.identity || q.identity_tag || "");
+    if(!tag) tag = normalizeIdentityTag(q.tier || "");
+    if(tag) return tag;
+    try{
+      var g = localStorage.getItem(GUEST_IDENTITY_KEY);
+      return normalizeIdentityTag(g || "") || "大学";
+    }catch(e){
+      return "大学";
+    }
+  }
+  function getEffectiveIdentityTag(){
+    if(currentUser && currentUser.identity_tag)
+      return normalizeIdentityTag(currentUser.identity_tag) || "大学";
+    return getGuestIdentityTag();
+  }
+  function persistGuestIdentity(tag){
+    var t = normalizeIdentityTag(tag) || "大学";
+    try{
+      localStorage.setItem(GUEST_IDENTITY_KEY, t);
+      localStorage.setItem(GUEST_CHOSEN_KEY, "1");
+    }catch(e){}
+    applyThemeFromIdentity(t);
+    var regId = document.getElementById("reg-identity");
+    if(regId && VALID_IDENTITY_TAGS.indexOf(t) >= 0) regId.value = t;
+    try{
+      var u = new URL(window.location.href);
+      u.searchParams.set("identity", t);
+      ["tier","identity_tag"].forEach(function(k){ u.searchParams.delete(k); });
+      window.history.replaceState({}, "", u.pathname + (u.search || "") + u.hash);
+    }catch(e){}
+  }
+  function showIdentityModal(){
+    var ov = document.getElementById("identity-modal-overlay");
+    if(ov) ov.style.display = "flex";
+  }
+  function hideIdentityModal(){
+    var ov = document.getElementById("identity-modal-overlay");
+    if(ov) ov.style.display = "none";
+  }
+  function maybeShowIdentityModal(){
+    if(currentUser) return;
+    var ov = document.getElementById("identity-modal-overlay");
+    if(!ov) return;
+    try{
+      if(localStorage.getItem(GUEST_CHOSEN_KEY) === "1") return;
+    }catch(e){}
+    ov.style.display = "flex";
+  }
+
+  function getApiBase(){
+    var o = window.location.origin;
+    if(o && o!=="null" && o.indexOf("file")!==0) return o;
+    return "http://127.0.0.1:6006";
+  }
+  function authHeaders(){
+    var h = {"Content-Type":"application/json"};
+    if(authToken) h["Authorization"] = "Bearer " + authToken;
+    return h;
+  }
+  function optionalAuthHeaders(){
+    var h = {};
+    if(authToken) h["Authorization"] = "Bearer " + authToken;
+    return h;
+  }
+
+  function isAdminRole(role){
+    return role==="school_admin" || role==="super_admin" || role==="admin";
+  }
+  function roleDisplayName(role){
+    if(role==="school_admin" || role==="admin") return "校级管理员";
+    if(role==="super_admin") return "超级管理员";
+    return "学生";
+  }
+
+  var IDENTITY_TIER = {"小学":"primary","初中":"middle","高中":"high","大学":"college","研究生":"grad","教师":"teacher"};
+  var THEME_FOR_TAG = {"小学":"kid","初中":"teen","高中":"high","大学":"college","研究生":"pro","教师":"pro"};
+  var UX_COPY = {
+    "小学":{
+      pageTitle:"心情探险队 · 校园智心守护（小学模式）",
+      gloss:"分龄界面 · 大一点按钮、简单说话就好",
+      navChat:"和小智聊天", navSurvey:"心情小测评", navRes:"帮助与热线",
+      chatTitle:"小智陪你聊天", moodTitle:"心情小灯", moodDesc:"你说得越多，小灯越懂你的心情哦。",
+      surveyTitle:"心情小测评", surveyIntro:"像小游戏一样选答案就好，没有对错～结果只是参考，不能代替医生哦。",
+      welcome:"你好呀！我是小智✨\n可以说说今天开心或不开心的事，也可以发图片给我～我会认真听！"
+    },
+    "初中":{
+      pageTitle:"匿名树洞 · 校园智心守护（初中模式）",
+      gloss:"树洞风格 · 匿名感与安全感",
+      navChat:"树洞倾诉", navSurvey:"匿名自评", navRes:"求助资源",
+      chatTitle:"树洞 · AI 陪伴", moodTitle:"心情树洞灯", moodDesc:"这里像只属于你的倾诉角，小智陪你梳理情绪。",
+      surveyTitle:"自评问卷", surveyIntro:"自评帮助了解状态，结果仅供参考；困扰加重时请找信任的大人或心理老师。",
+      welcome:"嗨，欢迎来树洞坐坐。\n可以打字或发图，说说学习、朋友或家里的烦心事，我会认真听，不评判。"
+    },
+    "高中":{
+      pageTitle:"升学压力站 · 校园智心守护（高中模式）",
+      gloss:"升学压力 · 监测—预警—干预闭环支持",
+      navChat:"心情倾诉", navSurvey:"心理测评", navRes:"资源与热线",
+      chatTitle:"AI 心理助手 · 压力疏导", moodTitle:"状态指示灯", moodDesc:"结合对话与系统规则，辅助你觉察压力与情绪变化。",
+      surveyTitle:"心理测评（筛查）", surveyIntro:"适合在学业紧张期做定期自查；结果不能替代专业诊断，危机时请拨打 110/120 或心理热线。",
+      welcome:"你好，我是小智。\n学业节奏紧的时候，可以把压力、焦虑和睡眠问题跟我聊聊；需要时我们一起找出口。"
+    },
+    "大学":{
+      pageTitle:"百川——联邦协同模式下的校园智心守护系统",
+      gloss:"实用工具向 · 自助与求助路径清晰",
+      navChat:"心情倾诉", navSurvey:"心理测评", navRes:"心理资源",
+      chatTitle:"AI 心理助手 · 心情倾诉", moodTitle:"小智 · 心情守护灯", moodDesc:"根据你最近的对话，用指示灯辅助感受情绪趋势。",
+      surveyTitle:"心理测评问卷", surveyIntro:"选择问卷自评，结果仅供参考，不能替代专业诊断。",
+      welcome:"嗨，这里是校园智心守护系统的小智。\n可以聊聊最近的心情，也可上传图片或截图，我来帮你分析。"
+    },
+    "研究生":{
+      pageTitle:"校园智心守护 · 研究生与成人支持模式",
+      gloss:"科研与职业压力 · 成人化支持",
+      navChat:"心理对话", navSurvey:"量表自评", navRes:"支持资源",
+      chatTitle:"AI 心理对话 · 疏导", moodTitle:"情绪与压力面板", moodDesc:"适合短时梳理科研、就业与关系压力；持续困扰请寻求专业咨询。",
+      surveyTitle:"心理量表", surveyIntro:"用于自我监测；结果仅供参考，不能替代临床评估。",
+      welcome:"你好，我是小智。\n科研、论文或职业选择上的压力都可以聊；我会尽量给出务实、边界清晰的回应。"
+    },
+    "教师":{
+      pageTitle:"校园智心守护 · 教师自我关怀模式",
+      gloss:"教师关怀 · 职业倦怠与边界",
+      navChat:"倾诉与支持", navSurvey:"自评工具", navRes:"资源与转介",
+      chatTitle:"教师心理支持 · 对话", moodTitle:"自我关照面板", moodDesc:"关注职业耗竭与情绪劳动，必要时请使用专业援助渠道。",
+      surveyTitle:"自评问卷", surveyIntro:"帮助觉察职业压力与情绪状态；结果仅供参考。",
+      welcome:"您好，我是小智。\n工作负荷、家校沟通或情绪耗竭都可以聊聊；也欢迎使用测评与资源页做自我调节。"
+    }
+  };
+
+  function syncStarMoodButtonActive(clickedBtn){
+    var wrap = document.getElementById("star-mood-row");
+    if(!wrap) return;
+    wrap.querySelectorAll("button").forEach(function(b){
+      if(clickedBtn === null) b.classList.remove("is-selected");
+      else b.classList.toggle("is-selected", b === clickedBtn);
+    });
+  }
+
+  function syncMoodChipsActive(){
+    var sel = document.getElementById("chat-mood-state");
+    var v = sel ? String(sel.value || "") : "";
+    document.querySelectorAll(".mood-chip").forEach(function(b){
+      b.classList.toggle("active", b.getAttribute("data-mood") === v);
+    });
+  }
+
+  function resetMoodUi(){
+    var sel = document.getElementById("chat-mood-state");
+    if(sel) sel.value = "";
+    syncMoodChipsActive();
+    syncStarMoodButtonActive(null);
+  }
+
+  function buildMoodChipsOnce(){
+    var row = document.getElementById("mood-chip-row");
+    if(!row || row.dataset.inited === "1") return;
+    row.dataset.inited = "1";
+    var moods = [
+      {k:"开心", emoji:"😊"},
+      {k:"平静", emoji:"😐"},
+      {k:"焦虑", emoji:"😰"},
+      {k:"难过", emoji:"😢"},
+      {k:"愤怒", emoji:"😤"},
+      {k:"疲惫", emoji:"😫"}
+    ];
+    moods.forEach(function(m){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "mood-chip";
+      b.setAttribute("data-mood", m.k);
+      b.textContent = m.emoji + " " + m.k;
+      b.addEventListener("click", function(){
+        var sel = document.getElementById("chat-mood-state");
+        if(sel) sel.value = m.k;
+        syncStarMoodButtonActive(null);
+        syncMoodChipsActive();
+      });
+      row.appendChild(b);
+    });
+    var sel = document.getElementById("chat-mood-state");
+    if(sel){
+      sel.addEventListener("change", function(){
+        syncMoodChipsActive();
+        syncStarMoodButtonActive(null);
+      });
+    }
+  }
+
+  function buildStarMoodButtons(){
+    var wrap = document.getElementById("star-mood-row");
+    if(!wrap) return;
+    var items = [
+      {emoji:"😊", text:"今天挺开心的", mood:"开心"},
+      {emoji:"😐", text:"有点无聊", mood:"平静"},
+      {emoji:"😢", text:"有点难过", mood:"难过"},
+      {emoji:"😤", text:"有点生气", mood:"愤怒"},
+      {emoji:"😰", text:"有点紧张", mood:"焦虑"}
+    ];
+    wrap.innerHTML = "";
+    items.forEach(function(it){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.setAttribute("aria-label", it.text);
+      b.setAttribute("data-mood", it.mood || "");
+      b.textContent = it.emoji + " " + it.text;
+      b.addEventListener("click", function(){
+        var ta = document.getElementById("chat-input");
+        if(ta){
+          ta.value = it.text;
+          ta.dispatchEvent(new Event("input"));
+          ta.focus();
+        }
+        var sel = document.getElementById("chat-mood-state");
+        if(sel && it.mood) sel.value = it.mood;
+        syncMoodChipsActive();
+        syncStarMoodButtonActive(b);
+      });
+      wrap.appendChild(b);
+    });
+  }
+
+  var TREE_KEY = "cm_treehole_leaves_v1";
+  var KID_ENERGY_KEY = "cm_kid_energy_pct_v1";
+  var EXAM_DATE_KEY = "cm_exam_target_v1";
+  var STICKER_KEY = "cm_sticker_count_v1";
+  var CHECKIN_KEY = "cm_mood_checkin_count_v1";
+  var HIGH_PLAN_KEY = "cm_high_plan_items_v1";
+
+  function refreshExamCountdown(){
+    var inp = document.getElementById("exam-target-date");
+    var out = document.getElementById("exam-countdown");
+    if(!inp || !out) return;
+    var v = inp.value;
+    if(!v){ out.textContent = "尚未设置"; return; }
+    var t = new Date(v + "T12:00:00");
+    var now = new Date();
+    var diff = Math.ceil((t.getTime() - now.getTime()) / 86400000);
+    if(diff > 0) out.textContent = "距离目标还有 " + diff + " 天";
+    else if(diff === 0) out.textContent = "就是今天，记得休息与加油！";
+    else out.textContent = "目标日已过，可更新为新目标";
+  }
+  function hydrateExamDate(){
+    var inp = document.getElementById("exam-target-date");
+    if(!inp) return;
+    try{
+      var s = localStorage.getItem(EXAM_DATE_KEY);
+      if(s) inp.value = s;
+    }catch(e){}
+    refreshExamCountdown();
+  }
+  function renderTreeHoleList(){
+    var list = document.getElementById("tree-hole-list");
+    if(!list) return;
+    var items = [];
+    try{ items = JSON.parse(localStorage.getItem(TREE_KEY) || "[]"); }catch(e2){ items = []; }
+    list.innerHTML = "";
+    if(!items.length){
+      var empty = document.createElement("div");
+      empty.className = "small-text text-muted";
+      empty.textContent = "还没有叶子，先写一条试试～";
+      list.appendChild(empty);
+      return;
+    }
+    items.slice().reverse().forEach(function(it){
+      var row = document.createElement("div");
+      row.className = "tree-leaf";
+      var tx = document.createElement("div");
+      tx.textContent = String(it.text || "").slice(0, 200);
+      var meta = document.createElement("div");
+      meta.className = "leaf-meta";
+      meta.textContent = (it.t ? new Date(it.t).toLocaleString() : "") + " · 仅本设备";
+      row.appendChild(tx);
+      row.appendChild(meta);
+      list.appendChild(row);
+    });
+  }
+  function postTreeHole(){
+    var ta = document.getElementById("tree-hole-input");
+    if(!ta) return;
+    var text = (ta.value || "").trim();
+    if(!text){ alert("先写几个字再挂上树洞吧"); return; }
+    var items = [];
+    try{ items = JSON.parse(localStorage.getItem(TREE_KEY) || "[]"); }catch(e3){ items = []; }
+    items.push({ text: text, t: Date.now() });
+    if(items.length > 40) items = items.slice(-40);
+    try{ localStorage.setItem(TREE_KEY, JSON.stringify(items)); }catch(e4){}
+    ta.value = "";
+    renderTreeHoleList();
+  }
+  function clearTreeHole(){
+    if(!confirm("确定清空树洞草稿？不可恢复。")) return;
+    try{ localStorage.removeItem(TREE_KEY); }catch(e5){}
+    renderTreeHoleList();
+  }
+  function kidEnergyBump(delta){
+    var fill = document.getElementById("kid-energy-fill");
+    if(!fill) return;
+    var w = parseInt(fill.style.width, 10);
+    if(isNaN(w) || !fill.style.width) w = 20;
+    w = Math.min(100, Math.max(5, w + (delta || 15)));
+    fill.style.width = w + "%";
+    try{ localStorage.setItem(KID_ENERGY_KEY, String(w)); }catch(e6){}
+  }
+  function hydrateKidEnergy(){
+    var fill = document.getElementById("kid-energy-fill");
+    if(!fill) return;
+    var w = 20;
+    try{ w = parseInt(localStorage.getItem(KID_ENERGY_KEY) || "20", 10); }catch(e7){ w = 20; }
+    if(isNaN(w)) w = 20;
+    fill.style.width = Math.min(100, Math.max(5, w)) + "%";
+  }
+  function refreshPrimaryBadges(){
+    var stickers = 0, checkins = 0;
+    try{
+      stickers = parseInt(localStorage.getItem(STICKER_KEY) || "0", 10) || 0;
+      checkins = parseInt(localStorage.getItem(CHECKIN_KEY) || "0", 10) || 0;
+    }catch(e8){}
+    var b1 = document.getElementById("badge-streak");
+    var b2 = document.getElementById("badge-stickers");
+    if(b1) b1.textContent = "心情打卡次数：" + checkins + " 次";
+    if(b2) b2.textContent = "收集贴纸：" + stickers + " 枚";
+  }
+  function clickPrimaryCheckin(){
+    try{
+      var stickers = (parseInt(localStorage.getItem(STICKER_KEY) || "0", 10) || 0) + 1;
+      var checkins = (parseInt(localStorage.getItem(CHECKIN_KEY) || "0", 10) || 0) + 1;
+      localStorage.setItem(STICKER_KEY, String(stickers));
+      localStorage.setItem(CHECKIN_KEY, String(checkins));
+    }catch(e9){}
+    refreshPrimaryBadges();
+  }
+  function defaultHighPlans(){
+    return [
+      { id: "p1", text: "本周至少 3 天睡满 7 小时", done: false },
+      { id: "p2", text: "每天留 15 分钟散步或拉伸", done: false },
+      { id: "p3", text: "与家长约定一次「不聊排名」的聊天", done: false }
+    ];
+  }
+  function loadHighPlans(){
+    try{
+      var raw = localStorage.getItem(HIGH_PLAN_KEY);
+      if(raw) return JSON.parse(raw);
+    }catch(e10){}
+    return defaultHighPlans();
+  }
+  function saveHighPlans(arr){
+    try{ localStorage.setItem(HIGH_PLAN_KEY, JSON.stringify(arr)); }catch(e11){}
+  }
+  function renderHighPlanList(){
+    var ul = document.getElementById("high-plan-list");
+    if(!ul) return;
+    var arr = loadHighPlans();
+    ul.innerHTML = "";
+    arr.forEach(function(it, idx){
+      var li = document.createElement("li");
+      var cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = !!it.done;
+      cb.dataset.idx = String(idx);
+      var span = document.createElement("span");
+      span.textContent = it.text;
+      li.appendChild(cb);
+      li.appendChild(span);
+      ul.appendChild(li);
+    });
+  }
+  function addHighPlanFromInput(){
+    var inp = document.getElementById("high-plan-new");
+    if(!inp) return;
+    var text = (inp.value || "").trim();
+    if(!text) return;
+    var arr = loadHighPlans();
+    arr.push({ id: "u" + Date.now(), text: text, done: false });
+    saveHighPlans(arr);
+    inp.value = "";
+    renderHighPlanList();
+  }
+  function refreshTierWidgets(tier, tag){
+    hydrateExamDate();
+    hydrateKidEnergy();
+    renderTreeHoleList();
+    renderHighPlanList();
+    refreshPrimaryBadges();
+    var sl = document.getElementById("high-sleep-slider");
+    var sv = document.getElementById("high-sleep-val");
+    if(sl && sv){
+      try{
+        var m = localStorage.getItem("cm_high_sleep_memo");
+        if(m) sl.value = m;
+      }catch(e12){}
+      sv.textContent = sl.value;
+    }
+  }
+  function initTierWidgetListeners(){
+    var ex = document.getElementById("exam-target-date");
+    if(ex) ex.addEventListener("change", function(){
+      try{ localStorage.setItem(EXAM_DATE_KEY, ex.value || ""); }catch(e13){}
+      refreshExamCountdown();
+    });
+    var exs = document.getElementById("btn-exam-save");
+    if(exs) exs.addEventListener("click", function(){
+      try{ localStorage.setItem(EXAM_DATE_KEY, (document.getElementById("exam-target-date") || {}).value || ""); }catch(e14){}
+      refreshExamCountdown();
+    });
+    var ke = document.getElementById("btn-kid-energy");
+    if(ke) ke.addEventListener("click", function(){ kidEnergyBump(20); });
+    var thp = document.getElementById("btn-tree-hole-post");
+    if(thp) thp.addEventListener("click", postTreeHole);
+    var thc = document.getElementById("btn-tree-hole-clear");
+    if(thc) thc.addEventListener("click", clearTreeHole);
+    var hpa = document.getElementById("btn-high-plan-add");
+    if(hpa) hpa.addEventListener("click", addHighPlanFromInput);
+    var hsl = document.getElementById("high-sleep-slider");
+    var hsv = document.getElementById("high-sleep-val");
+    if(hsl && hsv) hsl.addEventListener("input", function(){ hsv.textContent = hsl.value; });
+    var hss = document.getElementById("btn-high-sleep-save");
+    if(hss && hsl) hss.addEventListener("click", function(){
+      try{ localStorage.setItem("cm_high_sleep_memo", hsl.value); }catch(e15){}
+      alert("已保存到当前浏览器。");
+    });
+    var st = document.getElementById("btn-sticker-plus");
+    if(st) st.addEventListener("click", clickPrimaryCheckin);
+    var ul = document.getElementById("high-plan-list");
+    if(ul) ul.addEventListener("change", function(ev){
+      var t = ev.target;
+      if(!t || t.tagName !== "INPUT" || t.type !== "checkbox") return;
+      var idx = parseInt(t.dataset.idx, 10);
+      if(isNaN(idx)) return;
+      var arr = loadHighPlans();
+      if(arr[idx]) arr[idx].done = t.checked;
+      saveHighPlans(arr);
+    });
+  }
+
+  function applyResourceExtras(tier){
+    ["primary","middle","high"].forEach(function(x){
+      var el = document.getElementById("res-extra-"+x);
+      if(el) el.classList.toggle("d-none", tier !== x);
+    });
+  }
+
+  function applyThemeFromIdentity(tag){
+    var t = tag || "大学";
+    var prevTag = lastIdentityTag;
+    lastIdentityTag = t;
+    var theme = THEME_FOR_TAG[t] || "college";
+    var tier = IDENTITY_TIER[t] || "college";
+    document.body.setAttribute("data-ui-theme", theme);
+    document.body.setAttribute("data-identity-tier", tier);
+    buildQuickTips(t);
+    buildStarMoodButtons();
+    var u = UX_COPY[t] || UX_COPY["大学"];
+    var g = document.getElementById("top-identity-gloss");
+    if(g) g.textContent = u.gloss || "";
+    function setTxt(id, s){ var e=document.getElementById(id); if(e) e.textContent = s; }
+    setTxt("nav-label-chat", u.navChat);
+    setTxt("nav-label-survey", u.navSurvey);
+    setTxt("nav-label-resources", u.navRes);
+    setTxt("chat-card-title", u.chatTitle);
+    setTxt("mood-side-title", u.moodTitle);
+    setTxt("mood-side-desc", u.moodDesc);
+    setTxt("survey-page-title", u.surveyTitle);
+    setTxt("survey-intro-text", u.surveyIntro);
+    setTxt("top-main-title", u.pageTitle || "百川——联邦协同模式下的校园智心守护系统");
+    var wb = document.getElementById("chat-welcome-bubble");
+    var logEl = document.getElementById("chat-log");
+    if(wb && logEl && logEl.querySelectorAll(".chat-msg").length <= 1){
+      wb.textContent = u.welcome;
+    }
+    applyResourceExtras(tier);
+    refreshTierWidgets(tier, t);
+    if(prevTag && prevTag !== t){
+      resetMoodUi();
+    }
+    if(!currentUser && prevTag && prevTag !== t){
+      syncChatScopeFromAuth();
+    }
+  }
+
+  document.getElementById("btn-res-goto-chat").addEventListener("click", function(){
+    document.getElementById("nav-btn-chat").click();
+  });
+  function applyThemeFromUser(){
+    var tag = currentUser && currentUser.identity_tag;
+    applyThemeFromIdentity(tag);
+  }
+
+  function buildQuickTips(tag){
+    var wrap = document.getElementById("quick-tips");
+    if(!wrap) return;
+    var pools = {
+      "小学": ["今天有点开心","有点想家","和同学闹矛盾了","考试有点紧张"],
+      "初中": ["最近压力很大","和父母沟通不顺","对未来有点迷茫","睡眠不太好"],
+      "高中": ["学业压力好大","担心高考","人际关系烦","有点焦虑睡不着"],
+      "大学": ["实习/求职焦虑","宿舍关系","恋爱困扰","对未来方向不确定"],
+      "研究生": ["科研压力大","导师沟通","论文焦虑","职业选择"],
+      "教师": ["工作倦怠","家校沟通","情绪耗竭","需要放松"]
+    };
+    var list = pools[tag] || pools["大学"];
+    wrap.innerHTML = "";
+    list.forEach(function(phrase){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = phrase;
+      b.addEventListener("click", function(){
+        var ta = document.getElementById("chat-input");
+        ta.value = phrase;
+        ta.focus();
+      });
+      wrap.appendChild(b);
+    });
+  }
+
+  /* ===== localStorage 历史（按用户/访客隔离） ===== */
+  function safeTagSegment(s){
+    return String(s || "x").replace(/[^a-zA-Z0-9_\-\u4e00-\u9fff]/g, "_").slice(0, 24);
+  }
+  /** 本地聊天摘要分桶：登录用户 = uid + 账号学段；访客 = URL 优先的访客学段（与 getGuestIdentityTag 一致） */
+  function chatHistoryStorageKeyPart(){
+    if(currentUser){
+      var uid = currentUser.id != null && currentUser.id !== "" ? currentUser.id : currentUser.uid;
+      if(uid != null && uid !== ""){
+        var itag = normalizeIdentityTag(currentUser.identity_tag || "") || "大学";
+        return "uid_" + String(uid) + "_" + safeTagSegment(itag);
+      }
+    }
+    var g = getGuestIdentityTag ? getGuestIdentityTag() : "大学";
+    return "guest_" + safeTagSegment(g);
+  }
+  function chatHistoryStorageKey(){
+    return "campusmind_conversations_v2_" + chatHistoryStorageKeyPart();
+  }
+  function loadHistory(){
+    try{ return JSON.parse(localStorage.getItem(chatHistoryStorageKey())) || []; }catch(e){ return []; }
+  }
+  function saveHistory(l){
+    try{ localStorage.setItem(chatHistoryStorageKey(), JSON.stringify(l || [])); }catch(e){}
+  }
+  function addHistoryItem(item){ var l = loadHistory(); l.push(item); saveHistory(l); }
+
+  function getWelcomeCopy(){
+    var tag = getEffectiveIdentityTag() || "大学";
+    return (UX_COPY[tag] || UX_COPY["大学"]).welcome;
+  }
+  function applyChatSidebarMetrics(){
+    var hist = loadHistory().slice(-7);
+    var mc = document.getElementById("metric-count");
+    if(mc){
+      mc.textContent = hist.length;
+      var pos = hist.filter(function(h){
+        return ["joy","admiration","love","gratitude","optimism"].indexOf((h.top_emotion || "").toLowerCase()) >= 0;
+      });
+      var mp = document.getElementById("metric-positive");
+      var mw = document.getElementById("metric-warning");
+      if(mp) mp.textContent = (hist.length ? Math.round(pos.length / hist.length * 100) : 0) + "%";
+      if(mw) mw.textContent = hist.filter(function(h){
+        var x = (h.risk || "").toLowerCase();
+        return x && x !== "normal";
+      }).length;
+    }
+    if(hist.length){
+      var last = hist[hist.length - 1];
+      updateMood(last.top_emotion || "未知", last.risk || "normal");
+    }
+  }
+  function finishGuestChatReset(){
+    appendMessage("ai", getWelcomeCopy());
+    var dot = document.getElementById("mood-dot");
+    var txt = document.getElementById("mood-text");
+    if(dot && txt){
+      dot.style.backgroundColor = "#22c55e";
+      dot.style.boxShadow = "0 0 8px #22c55e";
+      txt.textContent = "当前心情：等待你的第一句话";
+    }
+    applyChatSidebarMetrics();
+  }
+  async function loadServerChatHistoryIntoLog(){
+    if(!currentUser || !authToken){
+      finishGuestChatReset();
+      return;
+    }
+    var log = document.getElementById("chat-log");
+    if(!log) return;
+    try{
+      var resp = await fetch(
+        getApiBase() + "/api/v1/chat/history?limit=" + encodeURIComponent(String(CHAT_UI_HISTORY_LIMIT)),
+        { headers: { Authorization: "Bearer " + authToken } }
+      );
+      if(!resp.ok) throw new Error("hist");
+      var data = await resp.json();
+      var items = data.items || [];
+      log.innerHTML = "";
+      if(items.length === 0){
+        appendMessage("ai", getWelcomeCopy());
+        try{ saveHistory([]); }catch(e0){}
+      }else{
+        items.forEach(function(row){
+          var ut = String(row.user_text || "").trim();
+          var iv = String(row.intervention || "").trim();
+          if(ut) appendMessage("user", ut);
+          if(iv) appendMessage("ai", iv);
+        });
+        var mapped = items.map(function(row){
+          var ts = row.created_at ? Date.parse(row.created_at) : NaN;
+          return {
+            ts: !isNaN(ts) ? ts : Date.now(),
+            identity: row.user_identity || getEffectiveIdentityTag(),
+            text: String(row.user_text || "").trim(),
+            top_emotion: row.top_emotion || "",
+            probability: 0,
+            risk: row.risk_level || "normal"
+          };
+        });
+        saveHistory(mapped);
+      }
+      applyChatSidebarMetrics();
+    }catch(e){
+      log.innerHTML = "";
+      try{ saveHistory([]); }catch(e2){}
+      appendMessage("ai", getWelcomeCopy());
+      appendMessage("ai", "（无法从服务器同步历史记录，请检查网络或数据库；你可继续对话，新内容会在服务端可用时写入。）");
+      applyChatSidebarMetrics();
+    }
+  }
+  /** 切换登录用户 / 访客学段 / 登出时：换存储键并清空聊天区，避免看见他人气泡 */
+  function resetChatLogToWelcome(){
+    var log = document.getElementById("chat-log");
+    if(!log) return;
+    log.innerHTML = "";
+    var rs = document.getElementById("risk-strip");
+    if(rs) rs.classList.remove("show", "warn", "crisis");
+    resetMoodUi();
+    if(currentUser && authToken){
+      loadServerChatHistoryIntoLog();
+      return;
+    }
+    finishGuestChatReset();
+  }
+  function syncChatScopeFromAuth(){
+    var sk = chatHistoryStorageKey();
+    if(__cm_chat_hist_scope === sk) return;
+    __cm_chat_hist_scope = sk;
+    resetChatLogToWelcome();
+  }
+  function bindChatScopeCrossTabGuards(){
+    try{
+      window.addEventListener("storage", function(ev){
+        if(!ev || !ev.key) return;
+        if(ev.key === GUEST_IDENTITY_KEY || ev.key === GUEST_CHOSEN_KEY) syncChatScopeFromAuth();
+      });
+    }catch(e){}
+    try{
+      document.addEventListener("visibilitychange", function(){
+        if(!document.hidden) syncChatScopeFromAuth();
+      });
+    }catch(e2){}
+  }
+
+  /* ===== 导航 ===== */
+  function switchSection(target){
+    document.querySelectorAll(".sidebar-link").forEach(function(b){
+      if(b.getAttribute("data-target")) b.classList.toggle("active", b.getAttribute("data-target")===target);
+    });
+    SECTIONS.forEach(function(id){
+      var el=document.getElementById(id);
+      if(el) el.classList.toggle("active", id===target);
+    });
+  }
+  document.querySelectorAll(".sidebar-link[data-target]").forEach(function(btn){
+    btn.addEventListener("click",function(){ switchSection(btn.getAttribute("data-target")); });
+  });
+
+  /* ===== 登录状态管理 ===== */
+  function updateUIForAuth(){
+    var navAuth = document.getElementById("nav-auth");
+    var navAdmin = document.getElementById("nav-admin");
+    var navLogout = document.getElementById("nav-logout");
+    var sidebarUser = document.getElementById("sidebar-user-display");
+    var topBadge = document.getElementById("top-user-badge");
+    var brandRole = document.getElementById("brand-role-text");
+    if(currentUser){
+      var name = currentUser.display_name || currentUser.username || "用户";
+      var role = currentUser.role || "student";
+      sidebarUser.textContent = name;
+      topBadge.textContent = name + " (" + roleDisplayName(role) + ")";
+      topBadge.className = "badge " + (isAdminRole(role) ? "bg-danger" : "bg-primary");
+      brandRole.textContent = isAdminRole(role) ? "管理端" : "学生端";
+      navAuth.classList.add("hidden");
+      navLogout.classList.remove("hidden");
+      if(isAdminRole(role)){ navAdmin.classList.remove("hidden"); } else { navAdmin.classList.add("hidden"); }
+      applyThemeFromUser();
+    }else{
+      sidebarUser.textContent = "未登录";
+      topBadge.textContent = "未登录（可匿名使用）";
+      topBadge.className = "badge bg-secondary";
+      brandRole.textContent = "学生端";
+      navAuth.classList.remove("hidden");
+      navAdmin.classList.add("hidden");
+      navLogout.classList.add("hidden");
+      applyThemeFromIdentity(getGuestIdentityTag());
+    }
+    var navIdGuest = document.getElementById("nav-identity-guest");
+    if(navIdGuest){
+      if(currentUser) navIdGuest.classList.add("hidden");
+      else navIdGuest.classList.remove("hidden");
+    }
+    syncChatScopeFromAuth();
+  }
+
+  async function tryRestoreSession(){
+    if(!authToken){ updateUIForAuth(); return; }
+    try{
+      var resp = await fetch(getApiBase()+"/api/v1/auth/me",{headers:{"Authorization":"Bearer "+authToken}});
+      if(resp.ok){ currentUser = await resp.json(); }
+      else{ authToken=""; localStorage.removeItem("cm_token"); currentUser=null; }
+    }catch(e){ /* offline, keep token */ }
+    updateUIForAuth();
+  }
+
+  function doLogout(){
+    authToken=""; currentUser=null;
+    localStorage.removeItem("cm_token");
+    updateUIForAuth();
+    switchSection("chat-section");
+  }
+  document.getElementById("nav-logout").addEventListener("click", doLogout);
+  var navIdGuestBtn = document.getElementById("nav-identity-guest");
+  if(navIdGuestBtn) navIdGuestBtn.addEventListener("click", showIdentityModal);
+  document.querySelectorAll(".identity-pick").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      persistGuestIdentity(btn.getAttribute("data-identity"));
+      hideIdentityModal();
+    });
+  });
+  var idModalSkip = document.getElementById("identity-modal-skip");
+  if(idModalSkip){
+    idModalSkip.addEventListener("click", function(){
+      try{ localStorage.setItem(GUEST_CHOSEN_KEY, "1"); }catch(e){}
+      hideIdentityModal();
+    });
+  }
+  var idModalOv = document.getElementById("identity-modal-overlay");
+  if(idModalOv){
+    idModalOv.addEventListener("click", function(e){
+      if(e.target === idModalOv){
+        try{ localStorage.setItem(GUEST_CHOSEN_KEY, "1"); }catch(e2){}
+        hideIdentityModal();
+      }
+    });
+  }
+
+  /* ===== 登录 / 注册 ===== */
+  document.querySelectorAll("#authTabs .auth-tab").forEach(function(btn){
+    btn.addEventListener("click",function(){
+      document.querySelectorAll("#authTabs .auth-tab").forEach(function(b){
+        b.classList.remove("active");
+        b.setAttribute("aria-selected","false");
+      });
+      btn.classList.add("active");
+      btn.setAttribute("aria-selected","true");
+      var tab = btn.getAttribute("data-tab");
+      document.getElementById("login-tab").style.display = tab==="login-tab"?"block":"none";
+      document.getElementById("register-tab").style.display = tab==="register-tab"?"block":"none";
+    });
+  });
+
+  function syncRegRoleWraps(){
+    var role = document.getElementById("reg-role").value;
+    document.getElementById("reg-school-admin-wrap").style.display = role==="school_admin"?"block":"none";
+    document.getElementById("reg-super-secret-wrap").style.display = role==="super_admin"?"block":"none";
+  }
+  document.getElementById("reg-role").addEventListener("change", syncRegRoleWraps);
+  syncRegRoleWraps();
+  document.getElementById("reg-identity").addEventListener("change", function(){
+    if(currentUser) return;
+    applyThemeFromIdentity(this.value);
+  });
+
+  function apiErrorText(data){
+    var d = data && data.detail;
+    if(typeof d === "string") return d;
+    if(Array.isArray(d)) return d.map(function(x){ return x.msg || JSON.stringify(x); }).join("; ");
+    return d ? JSON.stringify(d) : "请求失败";
+  }
+
+  document.getElementById("login-btn").addEventListener("click", async function(){
+    var hint = document.getElementById("login-hint");
+    var u = document.getElementById("login-username").value.trim();
+    var p = document.getElementById("login-password").value;
+    if(!u||!p){ hint.textContent="请输入用户名和密码"; hint.style.color="#ef4444"; return; }
+    hint.textContent="登录中..."; hint.style.color="var(--text-muted)";
+    try{
+      var resp = await fetch(getApiBase()+"/api/v1/auth/login",{
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({username:u,password:p})
+      });
+      var data = await resp.json();
+      if(!resp.ok){ hint.textContent=apiErrorText(data); hint.style.color="#ef4444"; return; }
+      authToken = data.token;
+      currentUser = data.user;
+      localStorage.setItem("cm_token", authToken);
+      updateUIForAuth();
+      hint.textContent="登录成功！"; hint.style.color="#22c55e";
+      setTimeout(function(){
+        if(isAdminRole(currentUser.role)){ window.location.href="admin.html"; }
+        else{ switchSection("chat-section"); }
+      },400);
+    }catch(e){ hint.textContent="网络错误："+e.message; hint.style.color="#ef4444"; }
+  });
+
+  document.getElementById("register-btn").addEventListener("click", async function(){
+    var hint = document.getElementById("register-hint");
+    var u = document.getElementById("reg-username").value.trim();
+    var p1 = document.getElementById("reg-password").value;
+    var p2 = document.getElementById("reg-password2").value;
+    if(!u||!p1){ hint.textContent="请填写用户名和密码"; hint.style.color="#ef4444"; return; }
+    if(p1!==p2){ hint.textContent="两次密码不一致"; hint.style.color="#ef4444"; return; }
+    if(p1.length<4){ hint.textContent="密码至少4位"; hint.style.color="#ef4444"; return; }
+    hint.textContent="注册中..."; hint.style.color="var(--text-muted)";
+    try{
+      var roleSel = document.getElementById("reg-role").value;
+      if(roleSel==="school_admin"){
+        var sec = document.getElementById("reg-admin-secret").value.trim();
+        if(!sec){ hint.textContent="注册校级管理员须填写「校级管理员注册密钥」"; hint.style.color="#ef4444"; return; }
+        if(!document.getElementById("reg-school").value.trim()){ hint.textContent="校级管理员须填写学校 ID（school_id）"; hint.style.color="#ef4444"; return; }
+      }
+      if(roleSel==="super_admin"){
+        var ssec = document.getElementById("reg-super-secret").value.trim();
+        if(!ssec){ hint.textContent="注册超级管理员须填写「超级管理员注册密钥」"; hint.style.color="#ef4444"; return; }
+      }
+      var body = {
+        username:u, password:p1,
+        role: roleSel,
+        identity_tag: document.getElementById("reg-identity").value,
+        display_name: document.getElementById("reg-displayname").value.trim(),
+        school_id: document.getElementById("reg-school").value.trim()
+      };
+      if(roleSel==="school_admin") body.admin_register_secret = document.getElementById("reg-admin-secret").value.trim();
+      if(roleSel==="super_admin") body.super_admin_register_secret = document.getElementById("reg-super-secret").value.trim();
+      var resp = await fetch(getApiBase()+"/api/v1/auth/register",{
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(body)
+      });
+      var data = await resp.json();
+      if(!resp.ok){ hint.textContent=apiErrorText(data); hint.style.color="#ef4444"; return; }
+      authToken = data.token;
+      currentUser = data.user;
+      localStorage.setItem("cm_token", authToken);
+      updateUIForAuth();
+      hint.textContent="注册成功！"; hint.style.color="#22c55e";
+      setTimeout(function(){
+        if(isAdminRole(currentUser.role)){ window.location.href="admin.html"; }
+        else{ switchSection("chat-section"); applyThemeFromUser(); }
+      },400);
+    }catch(e){ hint.textContent="网络错误："+e.message; hint.style.color="#ef4444"; }
+  });
+
+  /* ===== 管理员跳转 ===== */
+  document.getElementById("go-admin").addEventListener("click",function(){
+    if(currentUser) localStorage.setItem("cm_token", authToken);
+    window.location.href="admin.html";
+  });
+
+  /* ===== 聊天：消息显示 ===== */
+  function appendMessage(role, text, imageUrl){
+    var log = document.getElementById("chat-log");
+    var msg = document.createElement("div");
+    msg.className = "chat-msg " + role;
+    var bubble = document.createElement("div");
+    bubble.className = "bubble " + (role==="user"?"user":"ai");
+    if(imageUrl){
+      var img = document.createElement("img");
+      img.src = imageUrl; img.className="chat-thumb";
+      bubble.appendChild(img);
+      if(text){
+        var t = document.createElement("div");
+        t.textContent = text; t.style.marginTop="4px";
+        bubble.appendChild(t);
+      }
+    }else{
+      bubble.textContent = text;
+    }
+    msg.appendChild(bubble);
+    log.appendChild(msg);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function updateRiskStrip(risk, emotion){
+    var strip = document.getElementById("risk-strip");
+    var st = document.getElementById("risk-strip-text");
+    if(!strip || !st) return;
+    strip.classList.remove("show","warn","crisis");
+    if(risk==="crisis"){
+      strip.classList.add("show","crisis");
+      st.innerHTML = "<strong>危机预警</strong>：系统识别到较高风险内容。请尽快联系信任的成年人、学校心理中心或拨打紧急电话。你值得被帮助。（情绪线索：" + (emotion||"—") + "）";
+    }else if(risk==="warning" || risk==="attention" || risk==="intervention"){
+      strip.classList.add("show","warn");
+      st.innerHTML = "<strong>情绪预警</strong>：当前对话存在一定压力或负面情绪信号，建议适当休息、与身边人倾诉，或使用侧栏「心理资源」。（" + (emotion||"—") + "）";
+    }
+  }
+
+  function updateMood(emotion, risk){
+    var dot=document.getElementById("mood-dot");
+    var txt=document.getElementById("mood-text");
+    var color="#22c55e", label="偏平稳";
+    var r = (risk||"normal").toLowerCase();
+    if(r==="warning" || r==="attention"){ color="#facc15"; label="存在一定压力或负面情绪"; }
+    else if(r==="intervention"){ color="#fb923c"; label="建议关注心理状态，可寻求专业支持"; }
+    else if(r==="crisis"){ color="#ef4444"; label="出现高风险信号，请及时寻求帮助"; }
+    dot.style.backgroundColor=color; dot.style.boxShadow="0 0 8px "+color;
+    txt.textContent="当前心情："+label+"（主要情绪："+emotion+"）";
+    updateRiskStrip(r, emotion);
+    var history=loadHistory().slice(-7);
+    document.getElementById("metric-count").textContent=history.length;
+    var pos=history.filter(function(h){return["joy","admiration","love","gratitude","optimism"].indexOf((h.top_emotion||"").toLowerCase())>=0});
+    document.getElementById("metric-positive").textContent=(history.length?Math.round(pos.length/history.length*100):0)+"%";
+    document.getElementById("metric-warning").textContent=history.filter(function(h){
+      var x = (h.risk||"").toLowerCase();
+      return x && x!=="normal";
+    }).length;
+  }
+
+  /* ===== 图片选择与粘贴 ===== */
+  var fileInput = document.getElementById("image-file-input");
+  var previewArea = document.getElementById("image-preview");
+  var previewThumb = document.getElementById("preview-thumb");
+  var previewName = document.getElementById("preview-name");
+
+  function setImage(file){
+    if(!file||!file.type.startsWith("image/")) return;
+    pendingImage = {file: file};
+    var reader = new FileReader();
+    reader.onload = function(e){
+      pendingImage.dataUrl = e.target.result;
+      previewThumb.src = e.target.result;
+      previewName.textContent = file.name || "截图";
+      previewArea.classList.add("show");
+    };
+    reader.readAsDataURL(file);
+  }
+  function clearImage(){
+    pendingImage = null;
+    previewArea.classList.remove("show");
+    previewThumb.src = "";
+    previewName.textContent = "";
+    fileInput.value = "";
+  }
+
+  document.getElementById("btn-attach-image").addEventListener("click",function(){ fileInput.click(); });
+  fileInput.addEventListener("change",function(){ if(fileInput.files&&fileInput.files[0]) setImage(fileInput.files[0]); });
+  document.getElementById("remove-image").addEventListener("click", clearImage);
+
+  document.getElementById("chat-input").addEventListener("paste",function(e){
+    var items = (e.clipboardData||window.clipboardData).items;
+    for(var i=0;i<items.length;i++){
+      if(items[i].type.indexOf("image")>=0){
+        e.preventDefault();
+        setImage(items[i].getAsFile());
+        return;
+      }
+    }
+  });
+
+  /* ===== textarea 自动高度 ===== */
+  var chatInput = document.getElementById("chat-input");
+  chatInput.addEventListener("input",function(){
+    this.style.height="auto";
+    this.style.height=Math.min(this.scrollHeight,100)+"px";
+  });
+
+  /* ===== 发送消息（文字 / 图片） ===== */
+  async function sendMessage(){
+    syncChatScopeFromAuth();
+    var text = chatInput.value.trim();
+    var hasImage = !!pendingImage;
+    if(!text && !hasImage) return;
+    var btn = document.getElementById("chat-send");
+    btn.disabled = true;
+
+    if(hasImage){
+      appendMessage("user", text||"[图片]", pendingImage.dataUrl);
+    }else{
+      appendMessage("user", text);
+    }
+    var imgCopy = pendingImage;
+    chatInput.value=""; chatInput.style.height="auto";
+    clearImage();
+
+    try{
+      if(hasImage){
+        var form = new FormData();
+        form.append("image", imgCopy.file);
+        form.append("prompt", text || "请简要分析这张图片中可能反映的情绪或心理状态，1-2句话。");
+        var resp = await fetch(getApiBase()+"/api/v1/multimodal/analyze",{method:"POST",body:form});
+        if(!resp.ok) throw new Error("HTTP "+resp.status);
+        var data = await resp.json();
+        appendMessage("ai", data.analysis || "图片分析暂不可用，请稍后再试。");
+      }else{
+        var body = {message:text, age_group: getEffectiveIdentityTag()};
+        var moodSelect = document.getElementById("chat-mood-state");
+        var moodState = moodSelect ? moodSelect.value : "";
+        if(moodState) body.mood_state = moodState;
+        if(authToken) body.token = authToken;
+        var resp = await fetch(getApiBase()+"/api/v1/chat/message",{
+          method:"POST", headers:{"Content-Type":"application/json"},
+          body:JSON.stringify(body)
+        });
+        if(!resp.ok) throw new Error("HTTP "+resp.status+": "+await resp.text());
+        var data = await resp.json();
+        var top = (data.emotion||[])[0]||{};
+        var label = top.label||top.emotion||"未知";
+        var risk = data.risk_level||"normal";
+        var reply = data.intervention||"（系统暂无回复）";
+        if(authToken && currentUser){
+          await loadServerChatHistoryIntoLog();
+          updateMood(label, risk);
+        }else{
+          appendMessage("ai", reply);
+          updateMood(label, risk);
+          addHistoryItem({ts:Date.now(),identity:getEffectiveIdentityTag(),text:text,top_emotion:label,probability:top.probability,risk:risk});
+        }
+      }
+    }catch(e){
+      appendMessage("ai","抱歉，暂时无法连接服务，请检查网络后重试。");
+    }finally{
+      btn.disabled=false;
+    }
+  }
+
+  document.getElementById("chat-send").addEventListener("click", sendMessage);
+  chatInput.addEventListener("keydown",function(e){
+    if(e.key==="Enter"&&!e.shiftKey){ e.preventDefault(); sendMessage(); }
+  });
+  document.getElementById("clear-chat").addEventListener("click",function(){
+    saveHistory([]);
+    document.getElementById("chat-log").innerHTML="";
+    var rs = document.getElementById("risk-strip");
+    if(rs){ rs.classList.remove("show","warn","crisis"); }
+    resetMoodUi();
+    var uw = (UX_COPY[lastIdentityTag] || UX_COPY["大学"]).welcome;
+    appendMessage("ai", uw);
+  });
+
+  /* ===== 问卷模块 ===== */
+  var surveySelect = document.getElementById("survey-select");
+  var surveyBody = document.getElementById("survey-body");
+  var surveyResult = document.getElementById("survey-result");
+  var surveySubmitBtn = document.getElementById("survey-submit");
+  var loadedSurvey = null;
+
+  async function loadSurveyList(){
+    try{
+      var resp = await fetch(getApiBase()+"/api/v1/survey/list", { headers: optionalAuthHeaders() });
+      if(!resp.ok) throw new Error("HTTP "+resp.status);
+      var data = await resp.json();
+      surveySelect.innerHTML = '<option value="">-- 请选择问卷 --</option>';
+      (data.items||[]).forEach(function(q){
+        var opt = document.createElement("option");
+        opt.value = q.id;
+        opt.textContent = q.title + "（" + q.item_count + " 题）";
+        surveySelect.appendChild(opt);
+      });
+    }catch(e){
+      surveySelect.innerHTML = '<option value="">问卷列表暂时无法加载</option>';
+    }
+  }
+
+  async function loadSurveyDetail(qid){
+    surveyBody.innerHTML = '<div class="small-text">加载中...</div>';
+    surveySubmitBtn.disabled = true;
+    surveyResult.textContent = "";
+    try{
+      var resp = await fetch(getApiBase()+"/api/v1/survey/"+qid, { headers: optionalAuthHeaders() });
+      if(!resp.ok) throw new Error("HTTP "+resp.status);
+      loadedSurvey = await resp.json();
+      renderSurvey(loadedSurvey);
+      surveySubmitBtn.disabled = false;
+    }catch(e){
+      surveyBody.innerHTML = '<div class="text-danger small-text">问卷暂时无法加载，请稍后重试。</div>';
+    }
+  }
+
+  function renderSurvey(q){
+    var desc = q.description||"";
+    var html = '<div class="small-text mb-2">'+desc+'</div><div class="small-text mb-2">请根据实际情况作答：</div>';
+    (q.items||[]).forEach(function(item, idx){
+      html += '<div class="survey-q"><div class="fw-bold small-text mb-1">'+(idx+1)+'. '+item.question_text+'</div><div>';
+      var opts = item.options;
+      if(typeof opts==="string") opts=JSON.parse(opts);
+      opts.forEach(function(opt){
+        html += '<label class="me-3 small-text"><input type="radio" name="sq_'+idx+'" value="'+opt.value+'"> '+opt.label+'</label>';
+      });
+      html += '</div></div>';
+    });
+    surveyBody.innerHTML = html;
+  }
+
+  surveySelect.addEventListener("change",function(){
+    var v = surveySelect.value;
+    if(!v){ surveyBody.innerHTML=""; surveySubmitBtn.disabled=true; loadedSurvey=null; return; }
+    loadSurveyDetail(v);
+  });
+
+  surveySubmitBtn.addEventListener("click", async function(){
+    if(!loadedSurvey) return;
+    var answers = {};
+    var total = (loadedSurvey.items||[]).length;
+    var unanswered = 0;
+    for(var i=0;i<total;i++){
+      var checked = document.querySelector('input[name="sq_'+i+'"]:checked');
+      if(checked){ answers[String(i)] = parseInt(checked.value); }
+      else{ unanswered++; }
+    }
+    if(unanswered>0){
+      surveyResult.innerHTML = '<span class="text-warning">还有 '+unanswered+' 题未作答，请完整填写。</span>';
+      return;
+    }
+    surveySubmitBtn.disabled = true;
+    surveyResult.textContent = "提交中...";
+    try{
+      var body = {questionnaire_id: loadedSurvey.id, answers: answers};
+      if(authToken) body.token = authToken;
+      var resp = await fetch(getApiBase()+"/api/v1/survey/"+loadedSurvey.id+"/submit",{
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(body)
+      });
+      var data = await resp.json();
+      if(!resp.ok) throw new Error(data.detail||"提交失败");
+      var scoreLabel = data.multiplier && data.multiplier!==1 ? "标准分："+data.standard_score+"（粗分 "+data.raw_score+" × "+data.multiplier+"）" : "总分："+data.raw_score;
+      surveyResult.innerHTML =
+        '<div class="mt-2"><strong>'+scoreLabel+'</strong></div>'+
+        '<div>等级：<strong>'+data.result_level+'</strong></div>'+
+        '<div class="text-danger small-text mt-1">本结果仅为自我筛查参考，不能作为正式诊断结论。</div>'+
+        '<div class="mt-1">'+data.suggestion+'</div>';
+      if(document.body.getAttribute("data-identity-tier") === "primary") kidEnergyBump(30);
+    }catch(e){
+      surveyResult.innerHTML = '<span class="text-danger">提交失败：'+e.message+'</span>';
+    }finally{
+      surveySubmitBtn.disabled = false;
+    }
+  });
+
+  /* ===== 初始化：URL/本地学段 → 主题；会话恢复后再决定是否弹出学段选择 ===== */
+  hydrateIdentityFromUrl();
+  initTierWidgetListeners();
+  buildMoodChipsOnce();
+  bindChatScopeCrossTabGuards();
+  applyThemeFromIdentity(getGuestIdentityTag());
+  tryRestoreSession().then(function(){
+    loadSurveyList();
+    maybeShowIdentityModal();
+  });
+
+})();
+</script>
+</body>
+</html>

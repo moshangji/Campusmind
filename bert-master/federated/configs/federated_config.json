@@ -1,0 +1,35 @@
+{
+  "federated_learning": {
+    "num_clients": 5,
+    "num_rounds": 10,
+    "local_epochs": 1,
+    "aggregation_method": "fedavg",
+    "use_hierarchical": false,
+    "num_regions": 3,
+    "use_secure_aggregation": false
+  },
+  "privacy": {
+    "dp_epsilon": 1.0,
+    "dp_delta": 1e-5,
+    "clip_norm": 1.0
+  },
+  "training": {
+    "batch_size": 32,
+    "learning_rate": 2e-5,
+    "max_seq_length": 64,
+    "num_labels": 28
+  },
+  "model": {
+    "model_path": "bert-base-cased",
+    "num_labels": 28
+  },
+  "data": {
+    "data_dir": "/root/autodl-tmp/Campusmind/data/goemotions",
+    "train_file": "train.tsv",
+    "dev_file": "dev.tsv",
+    "test_file": "test.tsv"
+  },
+  "output": {
+    "output_dir": "/root/autodl-tmp/Campusmind/output/federated"
+  }
+}

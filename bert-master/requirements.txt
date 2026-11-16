@@ -1,0 +1,16 @@
+tensorflow >= 2.0.0   # 需 2.x 才有 tensorflow.compat.v1
+tensorflow_hub        # run_classifier_with_tfhub.py 需要
+# tensorflow-gpu >= 2.0.0  # GPU 版本
+
+# 项目核心依赖
+torch
+transformers
+scikit-learn
+requests
+
+# API 与大模型
+fastapi
+uvicorn[standard]
+pydantic
+openai
+pymysql
